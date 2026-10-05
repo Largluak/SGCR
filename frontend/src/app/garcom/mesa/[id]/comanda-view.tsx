@@ -5,9 +5,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { haQuantoTempo, numeroMesa, reais } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import type { Comanda, Mesa } from "@/lib/types";
 import { Estado } from "@/components/estado";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 export function ComandaView() {
   const params = useParams<{ id: string }>();
@@ -80,9 +81,9 @@ export function ComandaView() {
         {mesaLivre ? (
           <div className="mt-8">
             <h1 className="text-2xl font-semibold">Mesa {numeroMesa(mesaLivre.numero)} sem comanda aberta.</h1>
-            <Button className="mt-6 bg-[#b08968] text-[#1c232b]" render={<Link href="/garcom" />}>
+            <Link className={cn(buttonVariants(), "mt-6 bg-[#b08968] text-[#1c232b]")} href="/garcom">
               Voltar para o salão
-            </Button>
+            </Link>
           </div>
         ) : null}
         {comanda ? (
@@ -146,12 +147,12 @@ export function ComandaView() {
               ) : null}
               {comanda.status === "ABERTA" ? (
                 <div className="grid grid-cols-2 gap-2">
-                  <Button variant="outline" className="border-[#3a4450] bg-transparent text-[#ede9df]" render={<Link href={`/garcom/mesa/${params.id}/cardapio`} />}>
+                  <Link className={cn(buttonVariants({ variant: "outline" }), "border-[#3a4450] bg-transparent text-[#ede9df]")} href={`/garcom/mesa/${params.id}/cardapio`}>
                     Adicionar item
-                  </Button>
-                  <Button className="bg-[#b08968] text-[#1c232b] hover:bg-[#c4a080]" render={<Link href={`/garcom/mesa/${params.id}/fechamento`} />}>
+                  </Link>
+                  <Link className={cn(buttonVariants(), "bg-[#b08968] text-[#1c232b] hover:bg-[#c4a080]")} href={`/garcom/mesa/${params.id}/fechamento`}>
                     Fechar comanda
-                  </Button>
+                  </Link>
                 </div>
               ) : (
                 <p className="text-sm text-[#9aa4ae]">Esta comanda já foi fechada.</p>
