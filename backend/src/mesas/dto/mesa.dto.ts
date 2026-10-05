@@ -1,0 +1,16 @@
+import { Type } from 'class-transformer';
+import { IsInt, Min } from 'class-validator';
+
+export class CriarMesaDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  numero!: number;
+}
+
+export class AtualizarMesaDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  numero!: number;
+}

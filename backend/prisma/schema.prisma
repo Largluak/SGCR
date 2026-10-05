@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Perfil {
+  GARCOM
+  GERENTE
+}
+
+enum StatusComanda {
+  ABERTA
+  FECHADA
+}
+
+enum StatusPagamentoItem {
+  PENDENTE
+  PAGO
+}
+
+enum TipoProduto {
+  DIRETO
+  PREPARADO
+}
+
+enum CategoriaProduto {
+  ENTRADA
+  PRATO
+  BEBIDA
+  SOBREMESA
+}
+
+enum FormaPagamento {
+  DINHEIRO
+  CARTAO
+  PIX
+}
+
+enum TipoMovimentacao {
+  ENTRADA
+  SAIDA
+  AJUSTE
+}
+
+model Usuario {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String   @unique
+  senhaHash String
+  perfil    Perfil
+  criadoEm  DateTime @default(now())
+}
+
+model Mesa {
+  id       String    @id @default(cuid())
+  numero   Int       @unique
+  criadoEm DateTime  @default(now())
+  comandas Comanda[]
+}
+
+model Comanda {
+  id                  String        @id @default(cuid())
+  mesaId              String
+  mesa                Mesa          @relation(fields: [mesaId], references: [id])
+  status              StatusComanda @default(ABERTA)
+  pessoas             Int
+  aguardandoPagamento Boolean       @default(false)
+  abertaEm            DateTime      @default(now())
+  fechadaEm           DateTime?
+  itens               ItemComanda[]
+  pagamentos          Pagamento[]
+
+  @@index([mesaId, status])
+  @@index([fechadaEm])
+  @@index([abertaEm])
+}
+
+model Produto {
+  id        String           @id @default(cuid())
+  nome      String
+  descricao String?
+  categoria CategoriaProduto
+  preco     Decimal          @db.Decimal(10, 2)
+  tipo      TipoProduto
+  ativo     Boolean          @default(true)
+  estoque   Estoque?
+  itens     ItemComanda[]
+}
+
+model Estoque {
+  id            String                 @id @default(cuid())
+  produtoId     String                 @unique
+  produto       Produto                @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+  quantidade    Int
+  minimo        Int
+  movimentacoes MovimentacaoEstoque[]
+}
+
+model MovimentacaoEstoque {
+  id        String           @id @default(cuid())
+  estoqueId String
+  estoque   Estoque          @relation(fields: [estoqueId], references: [id], onDelete: Cascade)
+  tipo      TipoMovimentacao
+  quantidade Int
+  motivo    String?
+  criadoEm  DateTime         @default(now())
+}
+
+model ItemComanda {
+  id              String               @id @default(cuid())
+  comandaId       String
+  comanda         Comanda              @relation(fields: [comandaId], references: [id], onDelete: Cascade)
+  produtoId       String
+  produto         Produto              @relation(fields: [produtoId], references: [id])
+  quantidade      Int
+  precoUnitario   Decimal              @db.Decimal(10, 2)
+  statusPagamento StatusPagamentoItem  @default(PENDENTE)
+  pagamentoId     String?
+  pagamento       Pagamento?           @relation(fields: [pagamentoId], references: [id])
+
+  @@index([comandaId])
+}
+
+model Pagamento {
+  id       String         @id @default(cuid())
+  comandaId String
+  comanda  Comanda        @relation(fields: [comandaId], references: [id], onDelete: Cascade)
+  forma    FormaPagamento
+  valor    Decimal        @db.Decimal(10, 2)
+  criadoEm DateTime       @default(now())
+  itens    ItemComanda[]
+}

@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sgcr-postgres
+    environment:
+      POSTGRES_USER: sgcr
+      POSTGRES_PASSWORD: sgcr
+      POSTGRES_DB: sgcr
+    ports:
+      - "5432:5432"
+    volumes:
+      - sgcr_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sgcr -d sgcr"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sgcr_pg:
