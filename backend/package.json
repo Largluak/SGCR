@@ -21,7 +21,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:deploy": "prisma migrate deploy",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "prisma generate && tsx prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -66,7 +66,7 @@
     "typescript-eslint": "^8.20.0"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "prisma generate && tsx prisma/seed.ts"
   },
   "jest": {
     "moduleFileExtensions": [

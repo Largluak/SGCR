@@ -47,7 +47,7 @@ npm run dev:web
 - Salão e painel: http://127.0.0.1:4310
 - API: http://127.0.0.1:4311
 
-O `db:setup` aplica as tabelas e carrega o restaurante de demonstração Ardósia (12 mesas, cardápio e comandas abertas).
+O `db:setup` gera o cliente do Prisma, aplica as tabelas e carrega o restaurante de demonstração Ardósia (12 mesas, cardápio e comandas abertas).
 
 ### Acessos de demonstração
 
