@@ -12,6 +12,7 @@ const links = [
   { href: "/gestao/cardapio", label: "Cardápio" },
   { href: "/gestao/estoque", label: "Estoque" },
   { href: "/gestao/relatorios", label: "Relatórios" },
+  { href: "/gestao/equipe", label: "Equipe" },
   { href: "/gestao/marca", label: "Aparência" },
 ];
 
@@ -78,11 +79,23 @@ export function Painel({ children }: { children: React.ReactNode }) {
         </aside>
         <div className="min-w-0 flex-1">
           <header className="border-b bg-card/80 px-4 py-4 md:px-8">
-            <div className="flex items-center gap-3">
-              <MarcaLogo className="md:hidden" tamanho="size-8" />
-              <p className="text-sm text-muted-foreground">
-                <MarcaNome />
-              </p>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <MarcaLogo className="md:hidden" tamanho="size-8" />
+                <p className="text-sm text-muted-foreground">
+                  <MarcaNome />
+                </p>
+              </div>
+              <button
+                type="button"
+                className="text-sm text-muted-foreground underline-offset-4 hover:underline md:hidden"
+                onClick={() => {
+                  sair();
+                  router.push("/login");
+                }}
+              >
+                Sair
+              </button>
             </div>
           </header>
           <nav className="flex gap-2 overflow-x-auto border-b px-4 py-3 md:hidden">

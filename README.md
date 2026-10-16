@@ -58,7 +58,7 @@ O `db:setup` gera o cliente do Prisma, aplica as tabelas e carrega o restaurante
 
 As senhas ficam gravadas com hash. Troque `JWT_SECRET` no `backend/.env` se for sair do uso local.
 
-Em Gestão → Aparência o gerente troca o nome, a foto e a cor de destaque do restaurante. O painel continua claro, o salão continua escuro, e as cores de confirmar, cancelar e alerta permanecem as mesmas.
+Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência troca o nome, a foto e a cor de destaque do restaurante. O painel continua claro, o salão continua escuro, e as cores de confirmar, cancelar e alerta permanecem as mesmas.
 
 ## Testes
 
