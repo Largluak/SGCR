@@ -25,6 +25,11 @@ export function Painel({ children }: { children: React.ReactNode }) {
     return href === "/gestao" ? pathname === href : pathname.startsWith(href);
   }
 
+  function encerrar() {
+    sair();
+    router.push("/login");
+  }
+
   return (
     <RequireAuth papel="GERENTE">
       <div className="min-h-screen md:flex">
@@ -68,10 +73,7 @@ export function Painel({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               className="mt-3 text-xs text-muted-foreground underline-offset-4 hover:underline"
-              onClick={() => {
-                sair();
-                router.push("/login");
-              }}
+              onClick={encerrar}
             >
               Sair
             </button>
@@ -89,10 +91,7 @@ export function Painel({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 className="text-sm text-muted-foreground underline-offset-4 hover:underline md:hidden"
-                onClick={() => {
-                  sair();
-                  router.push("/login");
-                }}
+                onClick={encerrar}
               >
                 Sair
               </button>

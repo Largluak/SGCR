@@ -3,6 +3,7 @@
 import { PointerEvent, useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { hexParaHsv, hsvParaHex, normalizarHex, type Hsv } from "@/lib/cor";
+import { MARCA_PADRAO } from "@/lib/types";
 
 const FAIXA_MATIZ =
   "linear-gradient(to bottom, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%)";
@@ -18,7 +19,7 @@ export function SeletorCor({
   valor: string;
   onChange: (hex: string) => void;
 }) {
-  const inicial = normalizarHex(valor) ?? "#B08968";
+  const inicial = normalizarHex(valor) ?? MARCA_PADRAO.corSecundaria;
   const [hsv, setHsv] = useState<Hsv>(() => hexParaHsv(inicial));
   const [texto, setTexto] = useState(inicial);
   const emitido = useRef(inicial);

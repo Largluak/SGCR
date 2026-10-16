@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { access, mkdir, readdir, rm, writeFile } from 'fs/promises';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
-import { normalizarHex } from './cor';
+import { COR_PADRAO, normalizarHex } from './cor';
 import { AtualizarRestauranteDto } from './dto/atualizar-restaurante.dto';
 
 const ID = 'principal';
@@ -115,7 +115,7 @@ export class RestauranteService {
     return this.prisma.restaurante.upsert({
       where: { id: ID },
       update: {},
-      create: { id: ID, nome: 'Ardósia', corSecundaria: '#B08968' },
+      create: { id: ID, nome: 'Ardósia', corSecundaria: COR_PADRAO },
     });
   }
 

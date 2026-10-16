@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { categoriaLabel, categorias, numeroMesa, reais } from "@/lib/format";
+import { acaoMarca, contornoSalao } from "@/lib/salao";
 import type { Categoria, Mesa, Produto } from "@/lib/types";
 import { Estado } from "@/components/estado";
 import { Button } from "@/components/ui/button";
@@ -114,11 +115,11 @@ export function CardapioView() {
                     ) : null}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterar(produto, -1)} disabled={!quantidades[produto.id]}>
+                    <Button size="icon-sm" variant="outline" className={contornoSalao} onClick={() => alterar(produto, -1)} disabled={!quantidades[produto.id]}>
                       −
                     </Button>
                     <span className="w-6 text-center font-mono">{quantidades[produto.id] ?? 0}</span>
-                    <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterar(produto, 1)} disabled={semEstoque}>
+                    <Button size="icon-sm" variant="outline" className={contornoSalao} onClick={() => alterar(produto, 1)} disabled={semEstoque}>
                       +
                     </Button>
                   </div>
@@ -130,7 +131,7 @@ export function CardapioView() {
         {erro && mesa ? <p className="mt-4 text-sm text-danger-soft">{erro}</p> : null}
       </Estado>
       <div className="fixed inset-x-0 bottom-0 bg-salao p-4">
-        <Button className="mx-auto flex w-full max-w-lg bg-brand text-brand-foreground hover:bg-brand/85" disabled={selecionados === 0 || enviando || !mesa?.comanda} onClick={lancar}>
+        <Button className={`mx-auto flex w-full max-w-lg ${acaoMarca}`} disabled={selecionados === 0 || enviando || !mesa?.comanda} onClick={lancar}>
           {enviando ? "Lançando..." : `Lançar na comanda${selecionados ? ` (${selecionados})` : ""}`}
         </Button>
       </div>

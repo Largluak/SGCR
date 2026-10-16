@@ -95,6 +95,4 @@ export function aplicarCor(cor: string) {
   root.style.setProperty("--accent", cor);
   root.style.setProperty("--accent-foreground", frente);
   root.style.setProperty("--ring", cor);
-  root.style.setProperty("--chart-2", cor);
-  root.style.setProperty("--sidebar-ring", cor);
 }

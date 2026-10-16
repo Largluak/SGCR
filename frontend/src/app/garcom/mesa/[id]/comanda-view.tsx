@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { haQuantoTempo, numeroMesa, reais } from "@/lib/format";
+import { acaoMarca, contornoSalao } from "@/lib/salao";
 import { cn } from "@/lib/utils";
 import type { Comanda, Mesa } from "@/lib/types";
 import { Estado } from "@/components/estado";
@@ -120,11 +121,11 @@ export function ComandaView() {
                       </span>
                       {pago || comanda.status !== "ABERTA" ? null : (
                         <div className="flex items-center gap-2">
-                          <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterarQuantidade(item.id, item.quantidade - 1)}>
+                          <Button size="icon-sm" variant="outline" className={contornoSalao} onClick={() => alterarQuantidade(item.id, item.quantidade - 1)}>
                             −
                           </Button>
                           <span className="w-6 text-center font-mono text-sm">{item.quantidade}</span>
-                          <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>
+                          <Button size="icon-sm" variant="outline" className={contornoSalao} onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>
                             +
                           </Button>
                         </div>
@@ -147,10 +148,10 @@ export function ComandaView() {
               ) : null}
               {comanda.status === "ABERTA" ? (
                 <div className="grid grid-cols-2 gap-2">
-                  <Link className={cn(buttonVariants({ variant: "outline" }), "border-salao-line bg-transparent text-salao-ink")} href={`/garcom/mesa/${params.id}/cardapio`}>
+                  <Link className={cn(buttonVariants({ variant: "outline" }), contornoSalao)} href={`/garcom/mesa/${params.id}/cardapio`}>
                     Adicionar item
                   </Link>
-                  <Link className={cn(buttonVariants(), "bg-brand text-brand-foreground hover:bg-brand/85")} href={`/garcom/mesa/${params.id}/fechamento`}>
+                  <Link className={cn(buttonVariants(), acaoMarca)} href={`/garcom/mesa/${params.id}/fechamento`}>
                     Fechar comanda
                   </Link>
                 </div>

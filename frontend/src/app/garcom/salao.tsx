@@ -4,6 +4,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { haQuantoTempo, numeroMesa, statusMesaLabel, turno } from "@/lib/format";
+import { acaoMarca } from "@/lib/salao";
 import type { Mesa } from "@/lib/types";
 import { Estado } from "@/components/estado";
 import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
@@ -104,7 +105,7 @@ export function Salao() {
           </div>
         </div>
         <Button
-          className="bg-brand text-brand-foreground hover:bg-brand/85"
+          className={acaoMarca}
           onClick={() => {
             setErroAcao(null);
             setNumero(String((mesas.at(-1)?.numero ?? 0) + 1));

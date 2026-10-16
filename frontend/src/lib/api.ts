@@ -39,26 +39,26 @@ async function lerResposta<T>(resposta: Response, path: string): Promise<T> {
   return dados as T;
 }
 
-export async function api<T>(path: string, init?: RequestInit): Promise<T> {
+function comAutorizacao(headers: Headers) {
   const token = window.localStorage.getItem(TOKEN_KEY);
-  const headers = new Headers(init?.headers);
+  if (token) headers.set("Authorization", `Bearer ${token}`);
+  return headers;
+}
+
+export async function api<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = comAutorizacao(new Headers(init?.headers));
   if (init?.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
   const resposta = await fetch(`${base}${path}`, { ...init, headers });
   return lerResposta<T>(resposta, path);
 }
 
 export async function apiForm<T>(path: string, body: FormData, method = "POST"): Promise<T> {
-  const token = window.localStorage.getItem(TOKEN_KEY);
-  const headers = new Headers();
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-  const resposta = await fetch(`${base}${path}`, { method, body, headers });
+  const resposta = await fetch(`${base}${path}`, {
+    method,
+    body,
+    headers: comAutorizacao(new Headers()),
+  });
   return lerResposta<T>(resposta, path);
 }

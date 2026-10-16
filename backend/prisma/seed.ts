@@ -8,6 +8,7 @@ import {
   TipoProduto,
 } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { COR_PADRAO } from '../src/restaurante/cor';
 
 const prisma = new PrismaClient();
 
@@ -70,7 +71,7 @@ async function main() {
   await prisma.restaurante.upsert({
     where: { id: 'principal' },
     update: {},
-    create: { id: 'principal', nome: 'Ardósia', corSecundaria: '#B08968' },
+    create: { id: 'principal', nome: 'Ardósia', corSecundaria: COR_PADRAO },
   });
   const senhaGerente = await bcrypt.hash('gerente123', 10);
   const senhaGarcom = await bcrypt.hash('garcom123', 10);

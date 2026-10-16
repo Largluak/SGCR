@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { categoriaLabel, formaLabel, numeroMesa, porPessoa, reais } from "@/lib/format";
+import { contornoSalao } from "@/lib/salao";
 import type { Comanda, FormaPagamento, Mesa } from "@/lib/types";
 import { Estado } from "@/components/estado";
 import { Button } from "@/components/ui/button";
@@ -155,7 +156,7 @@ export function FechamentoView() {
                 key={item}
                 type="button"
                 variant="outline"
-                className={forma === item ? "border-brand bg-brand text-brand-foreground" : "border-salao-line bg-transparent text-salao-ink"}
+                className={forma === item ? "border-brand bg-brand text-brand-foreground" : contornoSalao}
                 onClick={() => setForma(item)}
               >
                 {formaLabel[item]}

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api, apiForm } from "@/lib/api";
 import { aplicarCor, normalizarHex } from "@/lib/cor";
-import type { Marca } from "@/lib/types";
+import { MARCA_PADRAO, type Marca } from "@/lib/types";
 
 const AMOSTRAS = [
   { cor: "#B08968", nome: "Bronze" },
@@ -154,7 +154,7 @@ export function MarcaView() {
         </div>
         <div className="space-y-3">
           <Label>Cor de destaque</Label>
-          <SeletorCor valor={normalizarHex(cor) ?? "#B08968"} onChange={setCor} />
+          <SeletorCor valor={normalizarHex(cor) ?? MARCA_PADRAO.corSecundaria} onChange={setCor} />
           <div className="flex flex-wrap gap-2">
             {AMOSTRAS.map((amostra) => (
               <button

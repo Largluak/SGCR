@@ -13,6 +13,7 @@ import {
   TipoProduto,
 } from '@prisma/client';
 import { fromCents, toCents } from '../common/money';
+import { totalDosItens } from '../mesas/mesas.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 const comandaInclude = {
@@ -350,20 +351,8 @@ export class ComandasService {
   }
 
   private apresentar(comanda: ComandaCompleta) {
-    const total = fromCents(
-      comanda.itens.reduce(
-        (soma, item) => soma + toCents(item.precoUnitario) * item.quantidade,
-        0,
-      ),
-    );
-    const totalPago = fromCents(
-      comanda.itens
-        .filter((item) => item.statusPagamento === StatusPagamentoItem.PAGO)
-        .reduce(
-          (soma, item) => soma + toCents(item.precoUnitario) * item.quantidade,
-          0,
-        ),
-    );
+    const total = totalDosItens(comanda.itens);
+    const totalPago = totalDosItens(comanda.itens, StatusPagamentoItem.PAGO);
     return {
       id: comanda.id,
       status: comanda.status,
