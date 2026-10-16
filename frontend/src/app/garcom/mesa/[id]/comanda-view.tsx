@@ -74,14 +74,14 @@ export function ComandaView() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-lg flex-col px-4 py-6">
-      <Link href="/garcom" className="font-mono text-xs text-[#b08968]">
+      <Link href="/garcom" className="font-mono text-xs text-brand">
         Voltar para o salão
       </Link>
       <Estado carregando={carregando} erro={erro} onTentar={carregar} vazio={false}>
         {mesaLivre ? (
           <div className="mt-8">
             <h1 className="text-2xl font-semibold">Mesa {numeroMesa(mesaLivre.numero)} sem comanda aberta.</h1>
-            <Link className={cn(buttonVariants(), "mt-6 bg-[#b08968] text-[#1c232b]")} href="/garcom">
+            <Link className={cn(buttonVariants(), "mt-6 bg-brand text-brand-foreground")} href="/garcom">
               Voltar para o salão
             </Link>
           </div>
@@ -90,41 +90,41 @@ export function ComandaView() {
           <>
             <header className="mt-4">
               <h1 className="text-3xl font-semibold">Mesa {numeroMesa(comanda.mesa.numero)}</h1>
-              <p className="mt-1 text-sm text-[#9aa4ae]">
+              <p className="mt-1 text-sm text-salao-muted">
                 {comanda.pessoas} pessoas · aberta há {haQuantoTempo(comanda.abertaEm)}
                 {comanda.aguardandoPagamento ? " · aguardando pagamento" : ""}
               </p>
             </header>
             <ul className="mt-6 flex-1 space-y-3">
               {comanda.itens.length === 0 ? (
-                <li className="rounded-md border border-dashed border-[#3a4450] p-4 text-sm text-[#9aa4ae]">
+                <li className="rounded-md border border-dashed border-salao-line p-4 text-sm text-salao-muted">
                   Nenhum item lançado ainda.
                 </li>
               ) : null}
               {comanda.itens.map((item) => {
                 const pago = item.statusPagamento === "PAGO";
                 return (
-                  <li key={item.id} className="rounded-md border border-[#3a4450] bg-[#232a32] p-3">
+                  <li key={item.id} className="rounded-md border border-salao-line bg-salao-card p-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="font-medium">{item.produto.nome}</p>
-                        <p className="font-mono text-xs text-[#9aa4ae]">
+                        <p className="font-mono text-xs text-salao-muted">
                           {item.quantidade} x {reais(item.precoUnitario)}
                         </p>
                       </div>
                       <p className="font-mono text-sm">{reais(item.total)}</p>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
-                      <span className={`font-mono text-xs ${pago ? "text-[#b08968]" : "text-[#9aa4ae]"}`}>
+                      <span className={`font-mono text-xs ${pago ? "text-success" : "text-salao-muted"}`}>
                         {pago ? "Pago" : "Pendente"}
                       </span>
                       {pago || comanda.status !== "ABERTA" ? null : (
                         <div className="flex items-center gap-2">
-                          <Button size="icon-sm" variant="outline" className="border-[#3a4450] bg-transparent text-[#ede9df]" onClick={() => alterarQuantidade(item.id, item.quantidade - 1)}>
+                          <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterarQuantidade(item.id, item.quantidade - 1)}>
                             −
                           </Button>
                           <span className="w-6 text-center font-mono text-sm">{item.quantidade}</span>
-                          <Button size="icon-sm" variant="outline" className="border-[#3a4450] bg-transparent text-[#ede9df]" onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>
+                          <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterarQuantidade(item.id, item.quantidade + 1)}>
                             +
                           </Button>
                         </div>
@@ -134,31 +134,31 @@ export function ComandaView() {
                 );
               })}
             </ul>
-            {acao ? <p className="mt-4 text-sm text-[#e7b2a8]">{acao}</p> : null}
-            <footer className="sticky bottom-0 mt-6 space-y-3 bg-[#1c232b] py-4">
+            {acao ? <p className="mt-4 text-sm text-danger-soft">{acao}</p> : null}
+            <footer className="sticky bottom-0 mt-6 space-y-3 bg-salao py-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-[#9aa4ae]">Total da comanda</span>
+                <span className="text-sm text-salao-muted">Total da comanda</span>
                 <span className="font-mono text-xl">{reais(comanda.total)}</span>
               </div>
               {comanda.totalPago > 0 ? (
-                <p className="text-right font-mono text-xs text-[#9aa4ae]">
+                <p className="text-right font-mono text-xs text-salao-muted">
                   Pago {reais(comanda.totalPago)} · pendente {reais(comanda.totalPendente)}
                 </p>
               ) : null}
               {comanda.status === "ABERTA" ? (
                 <div className="grid grid-cols-2 gap-2">
-                  <Link className={cn(buttonVariants({ variant: "outline" }), "border-[#3a4450] bg-transparent text-[#ede9df]")} href={`/garcom/mesa/${params.id}/cardapio`}>
+                  <Link className={cn(buttonVariants({ variant: "outline" }), "border-salao-line bg-transparent text-salao-ink")} href={`/garcom/mesa/${params.id}/cardapio`}>
                     Adicionar item
                   </Link>
-                  <Link className={cn(buttonVariants(), "bg-[#b08968] text-[#1c232b] hover:bg-[#c4a080]")} href={`/garcom/mesa/${params.id}/fechamento`}>
+                  <Link className={cn(buttonVariants(), "bg-brand text-brand-foreground hover:bg-brand/85")} href={`/garcom/mesa/${params.id}/fechamento`}>
                     Fechar comanda
                   </Link>
                 </div>
               ) : (
-                <p className="text-sm text-[#9aa4ae]">Esta comanda já foi fechada.</p>
+                <p className="text-sm text-salao-muted">Esta comanda já foi fechada.</p>
               )}
               {comanda.status === "ABERTA" && !comanda.aguardandoPagamento ? (
-                <Button variant="ghost" className="w-full text-[#ede9df]" onClick={pedirConta}>
+                <Button variant="ghost" className="w-full text-salao-ink" onClick={pedirConta}>
                   Pedir a conta
                 </Button>
               ) : null}

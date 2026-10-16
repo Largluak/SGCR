@@ -116,5 +116,19 @@ export type Relatorio = {
   ranking: { nome: string; quantidade: number; total: number }[];
 };
 
+export type Marca = {
+  nome: string;
+  corSecundaria: string;
+  fotoUrl: string | null;
+  atualizadoEm: string;
+};
+
+export const MARCA_PADRAO: Marca = {
+  nome: "Ardósia",
+  corSecundaria: "#B08968",
+  fotoUrl: null,
+  atualizadoEm: "",
+};
+
 export const TOKEN_KEY = "sgcr_token";
 export const USER_KEY = "sgcr_usuario";

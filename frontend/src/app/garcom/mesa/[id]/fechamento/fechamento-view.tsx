@@ -90,7 +90,7 @@ export function FechamentoView() {
 
   return (
     <main className="mx-auto max-w-lg px-4 py-6">
-      <Link href={`/garcom/mesa/${params.id}`} className="font-mono text-xs text-[#b08968]">
+      <Link href={`/garcom/mesa/${params.id}`} className="font-mono text-xs text-brand">
         Voltar para a comanda
       </Link>
       <h1 className="mt-4 text-3xl font-semibold">
@@ -98,9 +98,9 @@ export function FechamentoView() {
       </h1>
       <Estado carregando={carregando} erro={erro && !comanda ? erro : null} onTentar={carregar} vazio={!carregando && !erro && pendentes.length === 0} tituloVazio="Nada pendente" textoVazio="Todos os itens desta comanda já foram pagos.">
         <Tabs value={modo} onValueChange={setModo} className="mt-6">
-          <TabsList className="bg-[#232a32]">
-            <TabsTrigger value="inteira" className="text-[#ede9df] data-active:bg-[#b08968] data-active:text-[#1c232b]">Conta inteira</TabsTrigger>
-            <TabsTrigger value="parte" className="text-[#ede9df] data-active:bg-[#b08968] data-active:text-[#1c232b]">Pagar parte</TabsTrigger>
+          <TabsList className="bg-salao-card">
+            <TabsTrigger value="inteira" className="text-salao-ink data-active:bg-brand data-active:text-brand-foreground">Conta inteira</TabsTrigger>
+            <TabsTrigger value="parte" className="text-salao-ink data-active:bg-brand data-active:text-brand-foreground">Pagar parte</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -108,7 +108,7 @@ export function FechamentoView() {
           <ul className="mt-4 space-y-2">
             {pendentes.map((item) => (
               <li key={item.id}>
-                <label className="flex items-center gap-3 rounded-md border border-[#3a4450] bg-[#232a32] p-3">
+                <label className="flex items-center gap-3 rounded-md border border-salao-line bg-salao-card p-3">
                   <input
                     type="checkbox"
                     checked={selecionados.includes(item.id)}
@@ -125,37 +125,37 @@ export function FechamentoView() {
         ) : null}
 
         <section className="mt-6 space-y-2">
-          <h2 className="text-sm text-[#9aa4ae]">Resumo por categoria</h2>
+          <h2 className="text-sm text-salao-muted">Resumo por categoria</h2>
           {Object.entries(resumo).map(([nome, valor]) => (
             <div key={nome} className="flex justify-between text-sm">
               <span>{nome}</span>
               <span className="font-mono">{reais(valor)}</span>
             </div>
           ))}
-          <div className="flex justify-between border-t border-[#3a4450] pt-3 text-lg">
+          <div className="flex justify-between border-t border-salao-line pt-3 text-lg">
             <span>Total geral</span>
             <span className="font-mono">{reais(total)}</span>
           </div>
         </section>
 
         <div className="mt-6 space-y-2">
-          <Label htmlFor="dividir" className="text-[#ede9df]">Dividir entre</Label>
+          <Label htmlFor="dividir" className="text-salao-ink">Dividir entre</Label>
           <div className="flex items-center gap-3">
-            <Input id="dividir" className="w-24 border-[#3a4450] bg-[#232a32] text-[#ede9df]" type="number" min={1} value={pessoas} onChange={(event) => setPessoas(Number(event.target.value) || 1)} />
-            <span className="text-sm text-[#9aa4ae]">pessoas · {reais(porPessoa(total, pessoas))} por pessoa</span>
+            <Input id="dividir" className="w-24 border-salao-line bg-salao-card text-salao-ink" type="number" min={1} value={pessoas} onChange={(event) => setPessoas(Number(event.target.value) || 1)} />
+            <span className="text-sm text-salao-muted">pessoas · {reais(porPessoa(total, pessoas))} por pessoa</span>
           </div>
-          <p className="text-xs text-[#9aa4ae]">A divisão é só para mostrar o valor. O pagamento continua em um único registro.</p>
+          <p className="text-xs text-salao-muted">A divisão é só para mostrar o valor. O pagamento continua em um único registro.</p>
         </div>
 
         <div className="mt-6">
-          <p className="text-sm text-[#9aa4ae]">Forma de pagamento</p>
+          <p className="text-sm text-salao-muted">Forma de pagamento</p>
           <div className="mt-2 grid grid-cols-3 gap-2">
             {formas.map((item) => (
               <Button
                 key={item}
                 type="button"
                 variant="outline"
-                className={forma === item ? "border-[#b08968] bg-[#b08968] text-[#1c232b]" : "border-[#3a4450] bg-transparent text-[#ede9df]"}
+                className={forma === item ? "border-brand bg-brand text-brand-foreground" : "border-salao-line bg-transparent text-salao-ink"}
                 onClick={() => setForma(item)}
               >
                 {formaLabel[item]}
@@ -163,8 +163,8 @@ export function FechamentoView() {
             ))}
           </div>
         </div>
-        {erro && comanda ? <p className="mt-4 text-sm text-[#e7b2a8]">{erro}</p> : null}
-        <Button className="mt-6 w-full bg-[#b08968] text-[#1c232b] hover:bg-[#c4a080]" disabled={enviando || itens.length === 0} onClick={confirmar}>
+        {erro && comanda ? <p className="mt-4 text-sm text-danger-soft">{erro}</p> : null}
+        <Button className="mt-6 w-full" variant="success" disabled={enviando || itens.length === 0} onClick={confirmar}>
           {enviando ? "Registrando..." : "Confirmar fechamento"}
         </Button>
       </Estado>

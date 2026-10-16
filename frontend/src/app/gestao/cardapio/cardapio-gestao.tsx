@@ -165,7 +165,7 @@ export function CardapioGestao() {
                   <TableCell>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" onClick={() => abrirEdicao(produto)}>Editar</Button>
-                      <Button size="sm" variant="ghost" onClick={() => remover(produto)}>Remover</Button>
+                      <Button size="sm" variant="destructive" onClick={() => remover(produto)}>Remover</Button>
                     </div>
                   </TableCell>
                 </TableRow>

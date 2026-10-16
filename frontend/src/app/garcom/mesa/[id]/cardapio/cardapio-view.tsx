@@ -80,16 +80,16 @@ export function CardapioView() {
 
   return (
     <main className="mx-auto max-w-lg px-4 py-6 pb-28">
-      <Link href={`/garcom/mesa/${params.id}`} className="font-mono text-xs text-[#b08968]">
+      <Link href={`/garcom/mesa/${params.id}`} className="font-mono text-xs text-brand">
         Voltar para a comanda
       </Link>
       <h1 className="mt-4 text-3xl font-semibold">Cardápio</h1>
-      <p className="text-sm text-[#9aa4ae]">Mesa {mesa ? numeroMesa(mesa.numero) : ""}</p>
+      <p className="text-sm text-salao-muted">Mesa {mesa ? numeroMesa(mesa.numero) : ""}</p>
       <Estado carregando={carregando} erro={erro && !mesa ? erro : null} onTentar={carregar} vazio={false}>
         <Tabs value={categoria} onValueChange={(valor) => setCategoria(valor as Categoria)} className="mt-6">
-          <TabsList className="w-full bg-[#232a32]">
+          <TabsList className="w-full bg-salao-card">
             {categorias.map((item) => (
-              <TabsTrigger key={item} value={item} className="text-[#ede9df] data-active:bg-[#b08968] data-active:text-[#1c232b]">
+              <TabsTrigger key={item} value={item} className="text-salao-ink data-active:bg-brand data-active:text-brand-foreground">
                 {categoriaLabel[item]}
               </TabsTrigger>
             ))}
@@ -99,26 +99,26 @@ export function CardapioView() {
           {visiveis.map((produto) => {
             const semEstoque = produto.tipo === "DIRETO" && (produto.estoque?.quantidade ?? 0) === 0;
             return (
-              <li key={produto.id} className="rounded-md border border-[#3a4450] bg-[#232a32] p-3">
+              <li key={produto.id} className="rounded-md border border-salao-line bg-salao-card p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-medium">{produto.nome}</p>
                     {produto.descricao ? (
-                      <p className="text-sm text-[#9aa4ae]">{produto.descricao}</p>
+                      <p className="text-sm text-salao-muted">{produto.descricao}</p>
                     ) : null}
-                    <p className="mt-1 font-mono text-sm text-[#b08968]">{reais(produto.preco)}</p>
+                    <p className="mt-1 font-mono text-sm text-brand">{reais(produto.preco)}</p>
                     {produto.tipo === "DIRETO" ? (
-                      <p className="font-mono text-xs text-[#9aa4ae]">
+                      <p className="font-mono text-xs text-salao-muted">
                         {semEstoque ? "Sem estoque" : `${produto.estoque?.quantidade ?? 0} un`}
                       </p>
                     ) : null}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button size="icon-sm" variant="outline" className="border-[#3a4450] bg-transparent text-[#ede9df]" onClick={() => alterar(produto, -1)} disabled={!quantidades[produto.id]}>
+                    <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterar(produto, -1)} disabled={!quantidades[produto.id]}>
                       −
                     </Button>
                     <span className="w-6 text-center font-mono">{quantidades[produto.id] ?? 0}</span>
-                    <Button size="icon-sm" variant="outline" className="border-[#3a4450] bg-transparent text-[#ede9df]" onClick={() => alterar(produto, 1)} disabled={semEstoque}>
+                    <Button size="icon-sm" variant="outline" className="border-salao-line bg-transparent text-salao-ink" onClick={() => alterar(produto, 1)} disabled={semEstoque}>
                       +
                     </Button>
                   </div>
@@ -127,10 +127,10 @@ export function CardapioView() {
             );
           })}
         </ul>
-        {erro && mesa ? <p className="mt-4 text-sm text-[#e7b2a8]">{erro}</p> : null}
+        {erro && mesa ? <p className="mt-4 text-sm text-danger-soft">{erro}</p> : null}
       </Estado>
-      <div className="fixed inset-x-0 bottom-0 bg-[#1c232b] p-4">
-        <Button className="mx-auto flex w-full max-w-lg bg-[#b08968] text-[#1c232b] hover:bg-[#c4a080]" disabled={selecionados === 0 || enviando || !mesa?.comanda} onClick={lancar}>
+      <div className="fixed inset-x-0 bottom-0 bg-salao p-4">
+        <Button className="mx-auto flex w-full max-w-lg bg-brand text-brand-foreground hover:bg-brand/85" disabled={selecionados === 0 || enviando || !mesa?.comanda} onClick={lancar}>
           {enviando ? "Lançando..." : `Lançar na comanda${selecionados ? ` (${selecionados})` : ""}`}
         </Button>
       </div>

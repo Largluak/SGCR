@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { haQuantoTempo, numeroMesa, statusMesaLabel, turno } from "@/lib/format";
 import type { Mesa } from "@/lib/types";
 import { Estado } from "@/components/estado";
+import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -90,15 +91,20 @@ export function Salao() {
   return (
     <main className="mx-auto max-w-5xl px-4 py-6">
       <header className="mb-6 flex items-end justify-between gap-4">
-        <div>
-          <p className="font-mono text-xs text-[#b08968]">Turno {turno()}</p>
-          <h1 className="text-3xl font-semibold">Salão</h1>
-          <p className="mt-1 text-sm text-[#9aa4ae]">
-            {ocupadas} de {mesas.length} mesas ocupadas
-          </p>
+        <div className="flex items-center gap-3">
+          <MarcaLogo />
+          <div>
+            <p className="font-mono text-xs text-brand">
+              <MarcaNome /> · Turno {turno()}
+            </p>
+            <h1 className="text-3xl font-semibold">Salão</h1>
+            <p className="mt-1 text-sm text-salao-muted">
+              {ocupadas} de {mesas.length} mesas ocupadas
+            </p>
+          </div>
         </div>
         <Button
-          className="bg-[#b08968] text-[#1c232b] hover:bg-[#c4a080]"
+          className="bg-brand text-brand-foreground hover:bg-brand/85"
           onClick={() => {
             setErroAcao(null);
             setNumero(String((mesas.at(-1)?.numero ?? 0) + 1));
@@ -126,10 +132,10 @@ export function Salao() {
               }}
               className={`min-h-28 rounded-md border p-3 text-left ${
                 mesa.status === "LIVRE"
-                  ? "border-[#3a4450] bg-[#232a32]"
+                  ? "border-salao-line bg-salao-card"
                   : mesa.status === "AGUARDANDO_PAGAMENTO"
-                    ? "border-[#d4a017] bg-[#2c2618]"
-                    : "border-[#b08968] bg-[#2a241f]"
+                    ? "border-warning bg-warning/15"
+                    : "border-brand bg-brand/15"
               }`}
             >
               <span className="font-mono text-2xl">{numeroMesa(mesa.numero)}</span>
@@ -137,7 +143,7 @@ export function Salao() {
                 {mesa.status === "AGUARDANDO_PAGAMENTO" ? "Pagar" : statusMesaLabel[mesa.status]}
               </span>
               {mesa.comanda ? (
-                <span className="mt-1 block font-mono text-xs text-[#9aa4ae]">
+                <span className="mt-1 block font-mono text-xs text-salao-muted">
                   {haQuantoTempo(mesa.comanda.abertaEm)}
                 </span>
               ) : null}

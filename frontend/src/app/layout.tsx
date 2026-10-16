@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Work_Sans } from "next/font/google";
 import { AuthProvider } from "@/components/auth-provider";
+import { MarcaProvider } from "@/components/marca-provider";
 import { PwaRegister } from "@/components/pwa-register";
 import "./globals.css";
 
@@ -48,10 +49,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${workSans.variable} ${plexMono.variable} antialiased`}>
-        <AuthProvider>
-          {children}
-          <PwaRegister />
-        </AuthProvider>
+        <MarcaProvider>
+          <AuthProvider>
+            {children}
+            <PwaRegister />
+          </AuthProvider>
+        </MarcaProvider>
       </body>
     </html>
   );

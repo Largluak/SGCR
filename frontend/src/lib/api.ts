@@ -11,17 +11,11 @@ export class ApiError extends Error {
   }
 }
 
-export async function api<T>(path: string, init?: RequestInit): Promise<T> {
-  const token = window.localStorage.getItem(TOKEN_KEY);
-  const headers = new Headers(init?.headers);
-  if (init?.body && !headers.has("Content-Type")) {
-    headers.set("Content-Type", "application/json");
-  }
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
+export function urlDaApi(caminho: string) {
+  return `${base}${caminho}`;
+}
 
-  const resposta = await fetch(`${base}${path}`, { ...init, headers });
+async function lerResposta<T>(resposta: Response, path: string): Promise<T> {
   const dados = (await resposta.json().catch(() => null)) as {
     message?: string | string[];
   } | null;
@@ -43,4 +37,28 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   }
 
   return dados as T;
+}
+
+export async function api<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = window.localStorage.getItem(TOKEN_KEY);
+  const headers = new Headers(init?.headers);
+  if (init?.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  const resposta = await fetch(`${base}${path}`, { ...init, headers });
+  return lerResposta<T>(resposta, path);
+}
+
+export async function apiForm<T>(path: string, body: FormData, method = "POST"): Promise<T> {
+  const token = window.localStorage.getItem(TOKEN_KEY);
+  const headers = new Headers();
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  const resposta = await fetch(`${base}${path}`, { method, body, headers });
+  return lerResposta<T>(resposta, path);
 }

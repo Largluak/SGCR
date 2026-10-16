@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { useAuth } from "@/components/auth-provider";
+import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -49,8 +50,13 @@ export function LoginForm() {
         onSubmit={aoEnviar}
         className="w-full max-w-sm rounded-xl border bg-card p-8 shadow-sm"
       >
-        <p className="font-mono text-xs text-accent">Comanda</p>
-        <h1 className="mt-2 text-2xl font-semibold">Painel de gestão do restaurante</h1>
+        <div className="flex items-center gap-3">
+          <MarcaLogo />
+          <p className="font-mono text-xs text-brand">
+            <MarcaNome />
+          </p>
+        </div>
+        <h1 className="mt-4 text-2xl font-semibold">Painel de gestão do restaurante</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           O mesmo login vale para o salão e para a gestão. O perfil define a tela.
         </p>

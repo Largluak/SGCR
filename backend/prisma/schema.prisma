@@ -46,6 +46,14 @@ enum TipoMovimentacao {
   AJUSTE
 }
 
+model Restaurante {
+  id            String   @id
+  nome          String
+  corSecundaria String
+  fotoArquivo   String?
+  atualizadoEm  DateTime @updatedAt
+}
+
 model Usuario {
   id        String   @id @default(cuid())
   nome      String

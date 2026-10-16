@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { RequireAuth, useAuth } from "@/components/auth-provider";
+import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
 import { iniciais } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +12,7 @@ const links = [
   { href: "/gestao/cardapio", label: "Cardápio" },
   { href: "/gestao/estoque", label: "Estoque" },
   { href: "/gestao/relatorios", label: "Relatórios" },
+  { href: "/gestao/marca", label: "Aparência" },
 ];
 
 export function Painel({ children }: { children: React.ReactNode }) {
@@ -26,9 +28,14 @@ export function Painel({ children }: { children: React.ReactNode }) {
     <RequireAuth papel="GERENTE">
       <div className="min-h-screen md:flex">
         <aside className="hidden w-60 shrink-0 flex-col border-r bg-card md:flex">
-          <div className="px-5 py-6">
-            <p className="font-mono text-xs text-accent">Comanda</p>
-            <p className="mt-1 font-semibold">Painel de gestão</p>
+          <div className="flex items-center gap-3 px-5 py-6">
+            <MarcaLogo />
+            <div>
+              <p className="font-mono text-xs text-accent">
+                <MarcaNome />
+              </p>
+              <p className="mt-1 font-semibold">Painel de gestão</p>
+            </div>
           </div>
           <p className="px-5 font-mono text-[11px] tracking-wide text-muted-foreground uppercase">
             Operação
@@ -71,7 +78,12 @@ export function Painel({ children }: { children: React.ReactNode }) {
         </aside>
         <div className="min-w-0 flex-1">
           <header className="border-b bg-card/80 px-4 py-4 md:px-8">
-            <p className="text-sm text-muted-foreground">Restaurante Ardósia</p>
+            <div className="flex items-center gap-3">
+              <MarcaLogo className="md:hidden" tamanho="size-8" />
+              <p className="text-sm text-muted-foreground">
+                <MarcaNome />
+              </p>
+            </div>
           </header>
           <nav className="flex gap-2 overflow-x-auto border-b px-4 py-3 md:hidden">
             {links.map((link) => (

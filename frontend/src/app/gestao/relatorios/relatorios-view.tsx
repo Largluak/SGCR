@@ -159,7 +159,7 @@ export function RelatoriosView() {
                     {dados.vendasPorMes.map((item) => (
                       <div key={item.rotulo} className="flex h-full flex-1 flex-col justify-end gap-2">
                         <div
-                          className="rounded-t bg-[#b08968]"
+                          className="rounded-t bg-brand"
                           style={{ height: `${Math.max((item.total / maximo) * 100, item.total > 0 ? 6 : 0)}%` }}
                         />
                         <span className="text-center font-mono text-xs">{item.rotulo}</span>

@@ -188,7 +188,7 @@ export function VisaoGeral() {
                   <span>Mesa {mesa.numero}</span>
                   <span className="flex gap-2">
                     <Button size="sm" variant="outline" onClick={() => { setEditando(mesa); setNovoNumero(String(mesa.numero)); setAcaoErro(null); }}>Editar</Button>
-                    <Button size="sm" variant="ghost" onClick={() => removerMesa(mesa)}>Remover</Button>
+                    <Button size="sm" variant="destructive" onClick={() => removerMesa(mesa)}>Remover</Button>
                   </span>
                 </li>
               ))}

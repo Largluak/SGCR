@@ -67,6 +67,11 @@ async function limpar() {
 
 async function main() {
   await limpar();
+  await prisma.restaurante.upsert({
+    where: { id: 'principal' },
+    update: {},
+    create: { id: 'principal', nome: 'Ardósia', corSecundaria: '#B08968' },
+  });
   const senhaGerente = await bcrypt.hash('gerente123', 10);
   const senhaGarcom = await bcrypt.hash('garcom123', 10);
   await prisma.usuario.createMany({
