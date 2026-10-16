@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useMarca } from "@/components/marca-provider";
+import { SeletorCor } from "@/components/seletor-cor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -151,26 +152,10 @@ export function MarcaView() {
             required
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="cor">Cor de destaque</Label>
-          <div className="flex flex-wrap items-center gap-3">
-            <input
-              id="cor"
-              type="color"
-              value={(normalizarHex(cor) ?? "#B08968").toLowerCase()}
-              onChange={(event) => setCor(event.target.value.toUpperCase())}
-              className="size-10 cursor-pointer rounded-md border bg-transparent p-1"
-              aria-label="Escolher cor de destaque"
-            />
-            <Input
-              value={cor}
-              onChange={(event) => setCor(event.target.value)}
-              className="w-32 font-mono uppercase"
-              spellCheck={false}
-              aria-label="Código da cor"
-            />
-          </div>
-          <div className="flex flex-wrap gap-2 pt-1">
+        <div className="space-y-3">
+          <Label>Cor de destaque</Label>
+          <SeletorCor valor={normalizarHex(cor) ?? "#B08968"} onChange={setCor} />
+          <div className="flex flex-wrap gap-2">
             {AMOSTRAS.map((amostra) => (
               <button
                 key={amostra.cor}
