@@ -91,21 +91,21 @@ export function Salao() {
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-6">
-      <header className="mb-6 flex items-end justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
           <MarcaLogo />
-          <div>
-            <p className="font-mono text-xs text-brand">
+          <div className="min-w-0">
+            <p className="truncate font-mono text-xs text-brand">
               <MarcaNome /> · Turno {turno()}
             </p>
-            <h1 className="text-3xl font-semibold">Salão</h1>
+            <h1 className="text-2xl font-semibold sm:text-3xl">Salão</h1>
             <p className="mt-1 text-sm text-salao-muted">
               {ocupadas} de {mesas.length} mesas ocupadas
             </p>
           </div>
         </div>
         <Button
-          className={acaoMarca}
+          className={`w-full sm:w-auto ${acaoMarca}`}
           onClick={() => {
             setErroAcao(null);
             setNumero(String((mesas.at(-1)?.numero ?? 0) + 1));

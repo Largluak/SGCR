@@ -32,12 +32,12 @@ export function Painel({ children }: { children: React.ReactNode }) {
 
   return (
     <RequireAuth papel="GERENTE">
-      <div className="min-h-screen md:flex">
+      <div className="min-h-dvh overflow-x-clip md:flex">
         <aside className="hidden w-60 shrink-0 flex-col border-r bg-card md:flex">
           <div className="flex items-center gap-3 px-5 py-6">
             <MarcaLogo />
-            <div>
-              <p className="font-mono text-xs text-accent">
+            <div className="min-w-0">
+              <p className="truncate font-mono text-xs text-accent">
                 <MarcaNome />
               </p>
               <p className="mt-1 font-semibold">Painel de gestão</p>
@@ -52,7 +52,7 @@ export function Painel({ children }: { children: React.ReactNode }) {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "rounded-md px-3 py-2 text-sm",
+                  "flex min-h-11 items-center rounded-md px-3 text-sm",
                   ativo(link.href) ? "bg-secondary font-medium" : "text-muted-foreground hover:bg-secondary/70",
                 )}
               >
@@ -65,14 +65,14 @@ export function Painel({ children }: { children: React.ReactNode }) {
               <span className="flex size-9 items-center justify-center rounded-full bg-secondary font-mono text-xs">
                 {usuario ? iniciais(usuario.nome) : ""}
               </span>
-              <div>
-                <p className="text-sm font-medium">{usuario?.nome}</p>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{usuario?.nome}</p>
                 <p className="text-xs text-muted-foreground">Gerente</p>
               </div>
             </div>
             <button
               type="button"
-              className="mt-3 text-xs text-muted-foreground underline-offset-4 hover:underline"
+              className="mt-2 inline-flex min-h-11 items-center text-sm text-muted-foreground underline-offset-4 hover:underline"
               onClick={encerrar}
             >
               Sair
@@ -82,28 +82,28 @@ export function Painel({ children }: { children: React.ReactNode }) {
         <div className="min-w-0 flex-1">
           <header className="border-b bg-card/80 px-4 py-4 md:px-8">
             <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-3">
                 <MarcaLogo className="md:hidden" tamanho="size-8" />
-                <p className="text-sm text-muted-foreground">
+                <p className="truncate text-sm text-muted-foreground">
                   <MarcaNome />
                 </p>
               </div>
               <button
                 type="button"
-                className="text-sm text-muted-foreground underline-offset-4 hover:underline md:hidden"
+                className="inline-flex min-h-11 shrink-0 items-center px-2 text-sm text-muted-foreground underline-offset-4 hover:underline md:hidden"
                 onClick={encerrar}
               >
                 Sair
               </button>
             </div>
           </header>
-          <nav className="flex gap-2 overflow-x-auto border-b px-4 py-3 md:hidden">
+          <nav className="flex flex-wrap gap-2 border-b px-4 py-2 md:hidden">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  "shrink-0 rounded-full px-3 py-1 text-sm",
+                  "inline-flex min-h-11 items-center rounded-full px-4 text-sm",
                   ativo(link.href) ? "bg-primary text-primary-foreground" : "bg-secondary",
                 )}
               >

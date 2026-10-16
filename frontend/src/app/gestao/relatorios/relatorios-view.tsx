@@ -62,7 +62,7 @@ export function RelatoriosView() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Relatórios</h1>
+      <h1 className="text-2xl font-semibold sm:text-3xl">Relatórios</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {dados ? dados.rotulo : "Vendas de comandas fechadas"}
       </p>
@@ -155,23 +155,41 @@ export function RelatoriosView() {
                 {dados.comandasFechadas === 0 ? (
                   <p className="mt-4 text-sm text-muted-foreground">Nenhuma comanda fechada neste período.</p>
                 ) : (
-                  <div className="mt-4 flex h-44 items-end gap-3">
-                    {dados.vendasPorMes.map((item) => (
-                      <div key={item.rotulo} className="flex h-full flex-1 flex-col justify-end gap-2">
-                        <div
-                          className="rounded-t bg-brand"
-                          style={{ height: `${Math.max((item.total / maximo) * 100, item.total > 0 ? 6 : 0)}%` }}
-                        />
-                        <span className="text-center font-mono text-xs">{item.rotulo}</span>
-                      </div>
-                    ))}
+                  <div className="mt-4 overflow-x-auto">
+                    <div className="flex h-44 min-w-[16rem] items-end gap-3">
+                      {dados.vendasPorMes.map((item) => (
+                        <div key={item.rotulo} className="flex h-full min-w-0 flex-1 flex-col justify-end gap-2">
+                          <div
+                            className="rounded-t bg-brand"
+                            style={{ height: `${Math.max((item.total / maximo) * 100, item.total > 0 ? 6 : 0)}%` }}
+                          />
+                          <span className="truncate text-center font-mono text-xs">{item.rotulo}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </section>
               <section>
                 <h2 className="font-medium">Produtos mais vendidos</h2>
                 <p className="text-sm text-muted-foreground">Ranking por quantidade no período</p>
-                <div className="mt-3 overflow-x-auto rounded-xl border bg-card">
+                <ul className="mt-3 space-y-2 md:hidden">
+                  {dados.ranking.length === 0 ? (
+                    <li className="rounded-xl border bg-card px-4 py-3 text-sm text-muted-foreground">
+                      Sem produtos vendidos neste período.
+                    </li>
+                  ) : null}
+                  {dados.ranking.map((item, indice) => (
+                    <li key={item.nome} className="rounded-xl border bg-card px-4 py-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="min-w-0 font-medium break-words">{indice + 1}. {item.nome}</p>
+                        <p className="shrink-0 font-mono">{reais(item.total)}</p>
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">{item.quantidade} un</p>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-3 hidden overflow-x-auto rounded-xl border bg-card md:block">
                   <Table>
                     <TableHeader>
                       <TableRow>

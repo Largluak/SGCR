@@ -80,17 +80,17 @@ export function CardapioView() {
   }
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-6 pb-28">
-      <Link href={`/garcom/mesa/${params.id}`} className="font-mono text-xs text-brand">
+    <main className="mx-auto w-full max-w-lg px-4 py-6 pb-32">
+      <Link href={`/garcom/mesa/${params.id}`} className="inline-flex min-h-11 items-center font-mono text-sm text-brand">
         Voltar para a comanda
       </Link>
-      <h1 className="mt-4 text-3xl font-semibold">Cardápio</h1>
+      <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">Cardápio</h1>
       <p className="text-sm text-salao-muted">Mesa {mesa ? numeroMesa(mesa.numero) : ""}</p>
       <Estado carregando={carregando} erro={erro && !mesa ? erro : null} onTentar={carregar} vazio={false}>
         <Tabs value={categoria} onValueChange={(valor) => setCategoria(valor as Categoria)} className="mt-6">
-          <TabsList className="w-full bg-salao-card">
+          <TabsList className="!grid !h-auto w-full grid-cols-2 bg-salao-card min-[420px]:grid-cols-4">
             {categorias.map((item) => (
-              <TabsTrigger key={item} value={item} className="text-salao-ink data-active:bg-brand data-active:text-brand-foreground">
+              <TabsTrigger key={item} value={item} className="!h-auto min-h-11 text-salao-ink data-active:bg-brand data-active:text-brand-foreground">
                 {categoriaLabel[item]}
               </TabsTrigger>
             ))}
@@ -101,9 +101,9 @@ export function CardapioView() {
             const semEstoque = produto.tipo === "DIRETO" && (produto.estoque?.quantidade ?? 0) === 0;
             return (
               <li key={produto.id} className="rounded-md border border-salao-line bg-salao-card p-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="font-medium">{produto.nome}</p>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1 basis-40">
+                    <p className="font-medium break-words">{produto.nome}</p>
                     {produto.descricao ? (
                       <p className="text-sm text-salao-muted">{produto.descricao}</p>
                     ) : null}
@@ -114,7 +114,7 @@ export function CardapioView() {
                       </p>
                     ) : null}
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-2">
                     <Button size="icon-sm" variant="outline" className={contornoSalao} onClick={() => alterar(produto, -1)} disabled={!quantidades[produto.id]}>
                       −
                     </Button>
@@ -130,7 +130,7 @@ export function CardapioView() {
         </ul>
         {erro && mesa ? <p className="mt-4 text-sm text-danger-soft">{erro}</p> : null}
       </Estado>
-      <div className="fixed inset-x-0 bottom-0 bg-salao p-4">
+      <div className="fixed inset-x-0 bottom-0 bg-salao px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <Button className={`mx-auto flex w-full max-w-lg ${acaoMarca}`} disabled={selecionados === 0 || enviando || !mesa?.comanda} onClick={lancar}>
           {enviando ? "Lançando..." : `Lançar na comanda${selecionados ? ` (${selecionados})` : ""}`}
         </Button>

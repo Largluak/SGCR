@@ -114,7 +114,7 @@ export function SeletorCor({
             aria-valuemax={360}
             aria-valuenow={Math.round(hsv.h)}
             tabIndex={0}
-            className="relative h-40 w-4 shrink-0 cursor-ns-resize touch-none rounded-md"
+            className="relative h-40 w-8 shrink-0 cursor-ns-resize touch-none rounded-md sm:w-6"
             style={{ backgroundImage: FAIXA_MATIZ }}
             onKeyDown={(event) => {
               const passo = event.shiftKey ? 20 : 4;

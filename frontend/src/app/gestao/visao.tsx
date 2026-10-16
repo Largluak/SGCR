@@ -105,7 +105,7 @@ export function VisaoGeral() {
       {dados ? (
         <div className="space-y-8">
           <div>
-            <h1 className="text-3xl font-semibold">Visão geral</h1>
+            <h1 className="text-2xl font-semibold sm:text-3xl">Visão geral</h1>
             <p className="mt-1 text-sm text-muted-foreground">{dataPorExtenso()}</p>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -140,7 +140,25 @@ export function VisaoGeral() {
           <section>
             <h2 className="text-lg font-semibold">Últimas comandas</h2>
             <p className="text-sm text-muted-foreground">Comandas abertas e recém-fechadas no salão</p>
-            <div className="mt-3 overflow-x-auto rounded-xl border bg-card">
+            <ul className="mt-3 space-y-2 md:hidden">
+              {dados.ultimasComandas.length === 0 ? (
+                <li className="rounded-xl border bg-card px-4 py-3 text-sm text-muted-foreground">
+                  Nenhuma comanda registrada ainda.
+                </li>
+              ) : null}
+              {dados.ultimasComandas.map((comanda) => (
+                <li key={comanda.id} className="rounded-xl border bg-card px-4 py-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-medium">Mesa {comanda.mesaNumero}</p>
+                    <p className="shrink-0 font-mono">{reais(comanda.total)}</p>
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {statusTexto[comanda.statusOperacional]} · {comanda.pessoas} pessoas · {haQuantoTempo(comanda.abertaEm)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3 hidden overflow-x-auto rounded-xl border bg-card md:block">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -184,9 +202,9 @@ export function VisaoGeral() {
             {acaoErro ? <p className="mt-2 text-sm text-destructive">{acaoErro}</p> : null}
             <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {mesas.map((mesa) => (
-                <li key={mesa.id} className="flex items-center justify-between rounded-lg border bg-card px-3 py-2">
+                <li key={mesa.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2">
                   <span>Mesa {mesa.numero}</span>
-                  <span className="flex gap-2">
+                  <span className="flex flex-wrap gap-2">
                     <Button size="sm" variant="outline" onClick={() => { setEditando(mesa); setNovoNumero(String(mesa.numero)); setAcaoErro(null); }}>Editar</Button>
                     <Button size="sm" variant="destructive" onClick={() => removerMesa(mesa)}>Remover</Button>
                   </span>

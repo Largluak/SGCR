@@ -134,14 +134,33 @@ export function CardapioGestao() {
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold">Cardápio</h1>
+          <h1 className="text-2xl font-semibold sm:text-3xl">Cardápio</h1>
           <p className="mt-1 text-sm text-muted-foreground">{ativos} produtos cadastrados no cardápio ativo</p>
         </div>
         <Button onClick={abrirNovo}>Novo produto</Button>
       </div>
       {acaoErro && !aberto ? <p className="mt-3 text-sm text-destructive">{acaoErro}</p> : null}
-      <div className="mt-6 overflow-x-auto rounded-xl border bg-card">
+      <div className="mt-6">
         <Estado carregando={carregando} erro={erro} onTentar={carregar} vazio={!carregando && !erro && produtos.length === 0} tituloVazio="Cardápio vazio" textoVazio="Cadastre o primeiro produto para o salão começar a lançar pedidos.">
+          <ul className="space-y-3 md:hidden">
+            {produtos.map((produto) => (
+              <li key={produto.id} className="rounded-xl border bg-card p-4">
+                <p className="font-medium break-words">
+                  {produto.nome}
+                  {produto.ativo ? null : <Badge className="ml-2" variant="outline">Inativo</Badge>}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {categoriaLabel[produto.categoria]} · {tipoLabel[produto.tipo]}
+                </p>
+                <p className="mt-1 font-mono">{reais(produto.preco)}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" onClick={() => abrirEdicao(produto)}>Editar</Button>
+                  <Button size="sm" variant="destructive" onClick={() => remover(produto)}>Remover</Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden overflow-x-auto rounded-xl border bg-card md:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -172,6 +191,7 @@ export function CardapioGestao() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </Estado>
       </div>
 
@@ -190,7 +210,7 @@ export function CardapioGestao() {
                 <Label htmlFor="descricao">Descrição</Label>
                 <Input id="descricao" value={form.descricao} onChange={(event) => setForm({ ...form, descricao: event.target.value })} />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="space-y-1">
                   <Label>Categoria</Label>
                   <Select value={form.categoria} onValueChange={(valor) => valor && setForm({ ...form, categoria: valor as Categoria })}>
@@ -213,7 +233,7 @@ export function CardapioGestao() {
                   </Select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="space-y-1">
                   <Label htmlFor="preco">Preço</Label>
                   <Input id="preco" type="number" min="0.01" step="0.01" value={form.preco} onChange={(event) => setForm({ ...form, preco: event.target.value })} required />
@@ -225,8 +245,8 @@ export function CardapioGestao() {
                   </div>
                 ) : null}
               </div>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={form.ativo} onChange={(event) => setForm({ ...form, ativo: event.target.checked })} />
+              <label className="flex min-h-11 items-center gap-3 text-sm">
+                <input type="checkbox" className="size-6 shrink-0 accent-brand" checked={form.ativo} onChange={(event) => setForm({ ...form, ativo: event.target.checked })} />
                 Produto ativo no cardápio
               </label>
             </div>

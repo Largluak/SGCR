@@ -90,18 +90,18 @@ export function FechamentoView() {
   }
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-6">
-      <Link href={`/garcom/mesa/${params.id}`} className="font-mono text-xs text-brand">
+    <main className="mx-auto w-full max-w-lg px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <Link href={`/garcom/mesa/${params.id}`} className="inline-flex min-h-11 items-center font-mono text-sm text-brand">
         Voltar para a comanda
       </Link>
-      <h1 className="mt-4 text-3xl font-semibold">
+      <h1 className="mt-2 text-2xl font-semibold break-words sm:text-3xl">
         Fechar mesa {comanda ? numeroMesa(comanda.mesa.numero) : ""}
       </h1>
       <Estado carregando={carregando} erro={erro && !comanda ? erro : null} onTentar={carregar} vazio={!carregando && !erro && pendentes.length === 0} tituloVazio="Nada pendente" textoVazio="Todos os itens desta comanda já foram pagos.">
         <Tabs value={modo} onValueChange={setModo} className="mt-6">
-          <TabsList className="bg-salao-card">
-            <TabsTrigger value="inteira" className="text-salao-ink data-active:bg-brand data-active:text-brand-foreground">Conta inteira</TabsTrigger>
-            <TabsTrigger value="parte" className="text-salao-ink data-active:bg-brand data-active:text-brand-foreground">Pagar parte</TabsTrigger>
+          <TabsList className="!grid !h-auto w-full grid-cols-2 bg-salao-card">
+            <TabsTrigger value="inteira" className="!h-auto min-h-11 text-salao-ink data-active:bg-brand data-active:text-brand-foreground">Conta inteira</TabsTrigger>
+            <TabsTrigger value="parte" className="!h-auto min-h-11 text-salao-ink data-active:bg-brand data-active:text-brand-foreground">Pagar parte</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -112,13 +112,14 @@ export function FechamentoView() {
                 <label className="flex items-center gap-3 rounded-md border border-salao-line bg-salao-card p-3">
                   <input
                     type="checkbox"
+                    className="size-6 shrink-0 accent-brand"
                     checked={selecionados.includes(item.id)}
                     onChange={() => alternar(item.id)}
                   />
-                  <span className="flex-1">
+                  <span className="min-w-0 flex-1 break-words">
                     {item.quantidade}× {item.produto.nome}
                   </span>
-                  <span className="font-mono text-sm">{reais(item.total)}</span>
+                  <span className="shrink-0 font-mono text-sm">{reais(item.total)}</span>
                 </label>
               </li>
             ))}
@@ -128,22 +129,22 @@ export function FechamentoView() {
         <section className="mt-6 space-y-2">
           <h2 className="text-sm text-salao-muted">Resumo por categoria</h2>
           {Object.entries(resumo).map(([nome, valor]) => (
-            <div key={nome} className="flex justify-between text-sm">
-              <span>{nome}</span>
-              <span className="font-mono">{reais(valor)}</span>
+            <div key={nome} className="flex justify-between gap-3 text-sm">
+              <span className="min-w-0 break-words">{nome}</span>
+              <span className="shrink-0 font-mono">{reais(valor)}</span>
             </div>
           ))}
-          <div className="flex justify-between border-t border-salao-line pt-3 text-lg">
+          <div className="flex justify-between gap-3 border-t border-salao-line pt-3 text-lg">
             <span>Total geral</span>
-            <span className="font-mono">{reais(total)}</span>
+            <span className="shrink-0 font-mono">{reais(total)}</span>
           </div>
         </section>
 
         <div className="mt-6 space-y-2">
           <Label htmlFor="dividir" className="text-salao-ink">Dividir entre</Label>
-          <div className="flex items-center gap-3">
-            <Input id="dividir" className="w-24 border-salao-line bg-salao-card text-salao-ink" type="number" min={1} value={pessoas} onChange={(event) => setPessoas(Number(event.target.value) || 1)} />
-            <span className="text-sm text-salao-muted">pessoas · {reais(porPessoa(total, pessoas))} por pessoa</span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <Input id="dividir" className="w-full border-salao-line bg-salao-card text-salao-ink sm:w-24" type="number" min={1} value={pessoas} onChange={(event) => setPessoas(Number(event.target.value) || 1)} />
+            <span className="text-sm break-words text-salao-muted">pessoas · {reais(porPessoa(total, pessoas))} por pessoa</span>
           </div>
           <p className="text-xs text-salao-muted">A divisão é só para mostrar o valor. O pagamento continua em um único registro.</p>
         </div>
@@ -156,7 +157,7 @@ export function FechamentoView() {
                 key={item}
                 type="button"
                 variant="outline"
-                className={forma === item ? "border-brand bg-brand text-brand-foreground" : contornoSalao}
+                className={`min-w-0 whitespace-normal px-1.5 text-center ${forma === item ? "border-brand bg-brand text-brand-foreground" : contornoSalao}`}
                 onClick={() => setForma(item)}
               >
                 {formaLabel[item]}

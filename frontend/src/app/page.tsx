@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
+    <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-12 sm:px-6 sm:py-16">
       <div className="w-full max-w-3xl">
         <div className="mb-12 text-center">
           <MarcaSelo />
-          <h1 className="text-balance text-4xl font-semibold md:text-5xl">
+          <h1 className="text-balance text-3xl font-semibold sm:text-4xl md:text-5xl">
             Sistema de Comandas
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground">
@@ -24,7 +24,7 @@ export default function HomePage() {
         <div className="grid gap-6 md:grid-cols-2">
           <Link
             href="/garcom"
-            className="group flex flex-col justify-between rounded-md border border-salao-raised bg-salao-card p-8"
+            className="group flex min-h-11 flex-col justify-between rounded-md border border-salao-raised bg-salao-card p-6 sm:p-8"
           >
             <div>
               <div className="mb-6 flex size-12 items-center justify-center rounded-md bg-salao-raised text-salao-ink">
@@ -43,7 +43,7 @@ export default function HomePage() {
           </Link>
           <Link
             href="/login"
-            className="group flex flex-col justify-between rounded-md border bg-card p-8 hover:border-brand"
+            className="group flex min-h-11 flex-col justify-between rounded-md border bg-card p-6 sm:p-8 hover:border-brand"
           >
             <div>
               <div className="mb-6 flex size-12 items-center justify-center rounded-md bg-secondary">
@@ -62,7 +62,7 @@ export default function HomePage() {
           </Link>
         </div>
         <div className="mt-10 flex justify-center">
-          <Link href="/gestao" className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+          <Link href="/gestao" className="inline-flex min-h-11 items-center text-sm text-muted-foreground underline-offset-4 hover:underline">
             Ir direto para o dashboard
           </Link>
         </div>

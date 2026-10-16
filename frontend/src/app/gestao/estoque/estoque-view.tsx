@@ -92,7 +92,7 @@ export function EstoqueView() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold">Estoque</h1>
+      <h1 className="text-2xl font-semibold sm:text-3xl">Estoque</h1>
       <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
         Produtos diretos (bebidas) com baixa automática ao lançar na comanda. Pratos preparados não aparecem aqui, pois não há baixa por ficha técnica neste projeto.
       </p>
@@ -105,7 +105,7 @@ export function EstoqueView() {
                   <p className="font-medium">{atual.nome}</p>
                   <p className="text-sm text-muted-foreground">mínimo: {atual.minimo} un</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   {atual.baixo ? <Badge variant="destructive">Estoque baixo</Badge> : null}
                   <span className="font-mono text-lg">{atual.quantidade} un</span>
                   <Button variant="outline" onClick={() => abrir(atual)}>Ajustar</Button>

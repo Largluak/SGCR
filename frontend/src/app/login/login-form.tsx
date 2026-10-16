@@ -45,14 +45,14 @@ export function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6 py-16">
+    <main className="flex min-h-dvh items-center justify-center px-4 py-12 sm:px-6 sm:py-16">
       <form
         onSubmit={aoEnviar}
-        className="w-full max-w-sm rounded-xl border bg-card p-8 shadow-sm"
+        className="w-full max-w-sm rounded-xl border bg-card p-6 shadow-sm sm:p-8"
       >
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <MarcaLogo />
-          <p className="font-mono text-xs text-brand">
+          <p className="min-w-0 truncate font-mono text-xs text-brand">
             <MarcaNome />
           </p>
         </div>
@@ -88,12 +88,19 @@ export function LoginForm() {
         <Button className="mt-6 w-full" type="submit" disabled={enviando}>
           {enviando ? "Entrando..." : "Entrar"}
         </Button>
-        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-          Acesso restrito à equipe. Demonstração: gerente{" "}
-          <span className="font-mono">carla.souza@ardosia.local / gerente123</span>
-          ; garçom{" "}
-          <span className="font-mono">joao.ribeiro@ardosia.local / garcom123</span>.
-        </p>
+        <div className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
+          <p>Acesso restrito à equipe. Demonstração:</p>
+          <p className="font-mono text-xs sm:text-sm">
+            carla.souza@ardosia.local
+            <br />
+            senha gerente123
+          </p>
+          <p className="font-mono text-xs sm:text-sm">
+            joao.ribeiro@ardosia.local
+            <br />
+            senha garcom123
+          </p>
+        </div>
       </form>
     </main>
   );

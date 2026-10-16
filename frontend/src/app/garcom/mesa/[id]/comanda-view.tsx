@@ -74,8 +74,8 @@ export function ComandaView() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col px-4 py-6">
-      <Link href="/garcom" className="font-mono text-xs text-brand">
+    <main className="mx-auto flex w-full max-w-lg flex-1 flex-col px-4 py-6">
+      <Link href="/garcom" className="inline-flex min-h-11 items-center font-mono text-sm text-brand">
         Voltar para o salão
       </Link>
       <Estado carregando={carregando} erro={erro} onTentar={carregar} vazio={false}>
@@ -90,7 +90,7 @@ export function ComandaView() {
         {comanda ? (
           <>
             <header className="mt-4">
-              <h1 className="text-3xl font-semibold">Mesa {numeroMesa(comanda.mesa.numero)}</h1>
+              <h1 className="text-2xl font-semibold sm:text-3xl">Mesa {numeroMesa(comanda.mesa.numero)}</h1>
               <p className="mt-1 text-sm text-salao-muted">
                 {comanda.pessoas} pessoas · aberta há {haQuantoTempo(comanda.abertaEm)}
                 {comanda.aguardandoPagamento ? " · aguardando pagamento" : ""}
@@ -107,13 +107,13 @@ export function ComandaView() {
                 return (
                   <li key={item.id} className="rounded-md border border-salao-line bg-salao-card p-3">
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-medium">{item.produto.nome}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium break-words">{item.produto.nome}</p>
                         <p className="font-mono text-xs text-salao-muted">
                           {item.quantidade} x {reais(item.precoUnitario)}
                         </p>
                       </div>
-                      <p className="font-mono text-sm">{reais(item.total)}</p>
+                      <p className="shrink-0 font-mono text-sm">{reais(item.total)}</p>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
                       <span className={`font-mono text-xs ${pago ? "text-success" : "text-salao-muted"}`}>
@@ -136,10 +136,10 @@ export function ComandaView() {
               })}
             </ul>
             {acao ? <p className="mt-4 text-sm text-danger-soft">{acao}</p> : null}
-            <footer className="sticky bottom-0 mt-6 space-y-3 bg-salao py-4">
-              <div className="flex items-center justify-between">
+            <footer className="sticky bottom-0 mt-6 space-y-3 bg-salao py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+              <div className="flex items-center justify-between gap-3">
                 <span className="text-sm text-salao-muted">Total da comanda</span>
-                <span className="font-mono text-xl">{reais(comanda.total)}</span>
+                <span className="shrink-0 font-mono text-xl">{reais(comanda.total)}</span>
               </div>
               {comanda.totalPago > 0 ? (
                 <p className="text-right font-mono text-xs text-salao-muted">
@@ -147,11 +147,11 @@ export function ComandaView() {
                 </p>
               ) : null}
               {comanda.status === "ABERTA" ? (
-                <div className="grid grid-cols-2 gap-2">
-                  <Link className={cn(buttonVariants({ variant: "outline" }), contornoSalao)} href={`/garcom/mesa/${params.id}/cardapio`}>
+                <div className="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2">
+                  <Link className={cn(buttonVariants({ variant: "outline" }), contornoSalao, "w-full min-w-0 justify-center whitespace-normal")} href={`/garcom/mesa/${params.id}/cardapio`}>
                     Adicionar item
                   </Link>
-                  <Link className={cn(buttonVariants(), acaoMarca)} href={`/garcom/mesa/${params.id}/fechamento`}>
+                  <Link className={cn(buttonVariants(), acaoMarca, "w-full min-w-0 justify-center whitespace-normal")} href={`/garcom/mesa/${params.id}/fechamento`}>
                     Fechar comanda
                   </Link>
                 </div>

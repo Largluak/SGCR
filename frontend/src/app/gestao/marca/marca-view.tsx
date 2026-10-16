@@ -105,7 +105,7 @@ export function MarcaView() {
 
       <section className="mt-6 rounded-xl border bg-card p-4">
         <h2 className="font-medium">Foto do restaurante</h2>
-        <div className="mt-4 flex items-center gap-4">
+        <div className="mt-4 flex flex-wrap items-center gap-4">
           {fotoSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={fotoSrc} alt={marca.nome} className="size-16 rounded-full object-cover" />
@@ -114,7 +114,7 @@ export function MarcaView() {
               Sem foto
             </span>
           )}
-          <div className="space-y-2">
+          <div className="min-w-0 flex-1 space-y-2">
             <Label htmlFor="foto" className="sr-only">
               Foto do restaurante
             </Label>
@@ -163,7 +163,7 @@ export function MarcaView() {
                 title={amostra.nome}
                 aria-label={amostra.nome}
                 onClick={() => setCor(amostra.cor)}
-                className="size-8 rounded-full border border-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                className="size-11 rounded-full border border-black/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                 style={{ backgroundColor: amostra.cor }}
               />
             ))}

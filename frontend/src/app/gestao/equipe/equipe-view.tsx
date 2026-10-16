@@ -117,7 +117,7 @@ export function EquipeView() {
           ) : null}
           <ul className="mt-3 divide-y rounded-xl border bg-card">
             {membros.map((membro) => (
-              <li key={membro.id} className="flex items-center justify-between gap-3 px-4 py-3">
+              <li key={membro.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
                 <div className="min-w-0">
                   <p className="truncate font-medium">{membro.nome}</p>
                   <p className="truncate text-sm text-muted-foreground">{membro.email}</p>
