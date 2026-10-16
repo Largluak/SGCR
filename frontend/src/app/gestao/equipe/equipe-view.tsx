@@ -75,7 +75,7 @@ export function EquipeView() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-2xl font-semibold">Equipe</h1>
+      <h1 className="text-4xl sm:text-5xl">Equipe</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         Cadastre quem atende o salão. O garçom entra com o e-mail e a senha definidos aqui e usa o app do salão.
       </p>

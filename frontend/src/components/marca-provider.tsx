@@ -101,8 +101,8 @@ export function MarcaNome({ className }: { className?: string }) {
 export function MarcaSelo() {
   const { marca } = useMarca();
   return (
-    <span className="mx-auto mb-6 inline-flex max-w-full flex-wrap items-center justify-center gap-2 rounded-full border border-brand px-3 py-1 text-center font-mono text-xs break-words text-brand">
-      <MarcaLogo tamanho="size-5" />
+    <span className="inline-flex max-w-full flex-wrap items-center gap-2 text-lg break-words text-brand">
+      <MarcaLogo tamanho="size-7" />
       {marca.nome}
     </span>
   );

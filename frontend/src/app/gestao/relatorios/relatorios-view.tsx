@@ -62,7 +62,7 @@ export function RelatoriosView() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold sm:text-3xl">Relatórios</h1>
+      <h1 className="text-4xl sm:text-5xl">Relatórios</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         {dados ? dados.rotulo : "Vendas de comandas fechadas"}
       </p>

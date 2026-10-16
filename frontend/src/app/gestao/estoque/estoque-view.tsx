@@ -92,7 +92,7 @@ export function EstoqueView() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold sm:text-3xl">Estoque</h1>
+      <h1 className="text-4xl sm:text-5xl">Estoque</h1>
       <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
         Produtos diretos (bebidas) com baixa automática ao lançar na comanda. Pratos preparados não aparecem aqui, pois não há baixa por ficha técnica neste projeto.
       </p>

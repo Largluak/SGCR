@@ -98,7 +98,7 @@ export function MarcaView() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-semibold">Aparência</h1>
+      <h1 className="text-4xl sm:text-5xl">Aparência</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
         A foto e a cor de destaque seguem a identidade do restaurante. O painel continua claro, o salão continua escuro, e confirmar, cancelar e alerta não mudam.
       </p>

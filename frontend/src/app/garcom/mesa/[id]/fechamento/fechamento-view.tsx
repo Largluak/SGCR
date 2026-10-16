@@ -94,7 +94,7 @@ export function FechamentoView() {
       <Link href={`/garcom/mesa/${params.id}`} className="inline-flex min-h-11 items-center font-mono text-sm text-brand">
         Voltar para a comanda
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold break-words sm:text-3xl">
+      <h1 className="mt-2 text-4xl break-words text-salao-ink sm:text-5xl">
         Fechar mesa {comanda ? numeroMesa(comanda.mesa.numero) : ""}
       </h1>
       <Estado carregando={carregando} erro={erro && !comanda ? erro : null} onTentar={carregar} vazio={!carregando && !erro && pendentes.length === 0} tituloVazio="Nada pendente" textoVazio="Todos os itens desta comanda já foram pagos.">
@@ -109,7 +109,7 @@ export function FechamentoView() {
           <ul className="mt-4 space-y-2">
             {pendentes.map((item) => (
               <li key={item.id}>
-                <label className="flex items-center gap-3 rounded-md border border-salao-line bg-salao-card p-3">
+                <label className="flex items-center gap-3 rounded-2xl border border-salao-line bg-salao-card p-4">
                   <input
                     type="checkbox"
                     className="size-6 shrink-0 accent-brand"

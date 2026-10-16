@@ -95,10 +95,11 @@ export function Salao() {
         <div className="flex min-w-0 items-center gap-3">
           <MarcaLogo />
           <div className="min-w-0">
-            <p className="truncate font-mono text-xs text-brand">
-              <MarcaNome /> · Turno {turno()}
+            <p className="truncate text-sm text-salao-muted">
+              <span className="text-brand"><MarcaNome /></span>
+              {" "}· turno da {turno()}
             </p>
-            <h1 className="text-2xl font-semibold sm:text-3xl">Salão</h1>
+            <h1 className="text-4xl text-salao-ink sm:text-5xl">Salão</h1>
             <p className="mt-1 text-sm text-salao-muted">
               {ocupadas} de {mesas.length} mesas ocupadas
             </p>
@@ -131,15 +132,15 @@ export function Salao() {
                 setPessoas("2");
                 setMesaAbertura(mesa);
               }}
-              className={`min-h-28 rounded-md border p-3 text-left ${
+              className={`min-h-32 rounded-2xl border p-4 text-left transition-[transform,border-color,background-color] duration-200 ease-out hover:-translate-y-0.5 active:scale-[0.98] ${
                 mesa.status === "LIVRE"
-                  ? "border-salao-line bg-salao-card"
+                  ? "border-salao-line bg-salao-card hover:border-salao-muted"
                   : mesa.status === "AGUARDANDO_PAGAMENTO"
                     ? "border-warning bg-warning/15"
                     : "border-brand bg-brand/15"
               }`}
             >
-              <span className="font-mono text-2xl">{numeroMesa(mesa.numero)}</span>
+              <span className="font-heading text-4xl tabular-nums">{numeroMesa(mesa.numero)}</span>
               <span className="mt-3 block text-sm">
                 {mesa.status === "AGUARDANDO_PAGAMENTO" ? "Pagar" : statusMesaLabel[mesa.status]}
               </span>

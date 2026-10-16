@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-work);
+  --font-sans: var(--font-text);
   --font-mono: var(--font-plex);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -49,18 +49,18 @@
 }
 
 :root {
-  --background: #edeae2;
-  --foreground: #232a32;
-  --card: #f7f4ee;
-  --card-foreground: #232a32;
-  --popover: #f7f4ee;
-  --popover-foreground: #232a32;
-  --primary: #232a32;
-  --primary-foreground: #ede9df;
-  --secondary: #e7e1d6;
-  --secondary-foreground: #232a32;
-  --muted: #e7e1d6;
-  --muted-foreground: #6d645b;
+  --background: #f3efe6;
+  --foreground: #241f1b;
+  --card: #fbf7f0;
+  --card-foreground: #241f1b;
+  --popover: #fbf7f0;
+  --popover-foreground: #241f1b;
+  --primary: #241f1b;
+  --primary-foreground: #f6f1e8;
+  --secondary: #e8e0d4;
+  --secondary-foreground: #241f1b;
+  --muted: #e8e0d4;
+  --muted-foreground: #6d6258;
   --accent: #b08968;
   --accent-foreground: #1c232b;
   --brand: #b08968;
@@ -70,17 +70,17 @@
   --warning: #d4a017;
   --warning-foreground: #1c232b;
   --danger-soft: #e7b2a8;
-  --salao: #1c232b;
-  --salao-raised: #2e363f;
-  --salao-card: #232a32;
-  --salao-line: #3a4450;
-  --salao-muted: #9aa4ae;
-  --salao-ink: #ede9df;
+  --salao: #14181d;
+  --salao-raised: #2a3138;
+  --salao-card: #1c2228;
+  --salao-line: #3a424b;
+  --salao-muted: #a8b0b8;
+  --salao-ink: #f4efe6;
   --destructive: #9f3a2f;
-  --border: #ddd4c6;
-  --input: #ddd4c6;
+  --border: #e0d5c6;
+  --input: #e0d5c6;
   --ring: #b08968;
-  --radius: 0.5rem;
+  --radius: 0.8rem;
 }
 
 @layer base {
@@ -94,5 +94,33 @@
   body {
     @apply bg-background text-foreground;
     overflow-x: clip;
+    line-height: 1.55;
+    background-image:
+      radial-gradient(900px 420px at -10% -20%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 70%),
+      radial-gradient(700px 380px at 110% -10%, #fff, transparent 55%);
+    background-attachment: fixed;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-weight: 520;
+    letter-spacing: -0.03em;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--brand) 32%, white);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  button,
+  a,
+  [data-slot="button"] {
+    transition: none;
   }
 }

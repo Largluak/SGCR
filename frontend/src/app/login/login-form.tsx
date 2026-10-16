@@ -45,19 +45,31 @@ export function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center px-4 py-12 sm:px-6 sm:py-16">
+    <main className="grid min-h-dvh lg:grid-cols-2">
+      <section className="hidden flex-col justify-between bg-salao px-12 py-14 text-salao-ink lg:flex">
+        <p className="font-heading text-3xl">
+          <MarcaNome />
+        </p>
+        <p className="max-w-sm font-heading text-4xl leading-[1.1] text-salao-ink">
+          Quem atende entra no salão. Quem cuida da casa entra aqui.
+        </p>
+        <p className="max-w-xs text-sm leading-relaxed text-salao-muted">
+          O mesmo usuário serve para os dois lados. O perfil escolhe a tela.
+        </p>
+      </section>
+      <section className="flex items-center justify-center px-4 py-12 sm:px-6">
       <form
         onSubmit={aoEnviar}
-        className="w-full max-w-sm rounded-xl border bg-card p-6 shadow-sm sm:p-8"
+        className="w-full max-w-sm"
       >
         <div className="flex min-w-0 items-center gap-3">
           <MarcaLogo />
-          <p className="min-w-0 truncate font-mono text-xs text-brand">
+          <p className="min-w-0 truncate font-heading text-xl text-brand">
             <MarcaNome />
           </p>
         </div>
-        <h1 className="mt-4 text-2xl font-semibold">Painel de gestão do restaurante</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h1 className="mt-6 text-4xl">Entrar na casa</h1>
+        <p className="mt-3 text-base leading-relaxed text-muted-foreground lg:hidden">
           O mesmo login vale para o salão e para a gestão. O perfil define a tela.
         </p>
         <div className="mt-6 space-y-4">
@@ -88,20 +100,27 @@ export function LoginForm() {
         <Button className="mt-6 w-full" type="submit" disabled={enviando}>
           {enviando ? "Entrando..." : "Entrar"}
         </Button>
-        <div className="mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
-          <p>Acesso restrito à equipe. Demonstração:</p>
-          <p className="font-mono text-xs sm:text-sm">
-            carla.souza@ardosia.local
-            <br />
-            senha gerente123
+        <div className="mt-8 space-y-3 text-sm leading-relaxed text-muted-foreground">
+          <p>Acesso da equipe. Para a demonstração:</p>
+          <p>
+            Carla, gerente
+            <span className="mt-1 block font-mono text-xs">
+              carla.souza@ardosia.local
+              <br />
+              senha gerente123
+            </span>
           </p>
-          <p className="font-mono text-xs sm:text-sm">
-            joao.ribeiro@ardosia.local
-            <br />
-            senha garcom123
+          <p>
+            João, garçom
+            <span className="mt-1 block font-mono text-xs">
+              joao.ribeiro@ardosia.local
+              <br />
+              senha garcom123
+            </span>
           </p>
         </div>
       </form>
+      </section>
     </main>
   );
 }

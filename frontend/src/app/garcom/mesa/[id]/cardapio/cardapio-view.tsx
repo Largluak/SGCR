@@ -84,7 +84,7 @@ export function CardapioView() {
       <Link href={`/garcom/mesa/${params.id}`} className="inline-flex min-h-11 items-center font-mono text-sm text-brand">
         Voltar para a comanda
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">Cardápio</h1>
+      <h1 className="mt-2 text-4xl text-salao-ink sm:text-5xl">Cardápio</h1>
       <p className="text-sm text-salao-muted">Mesa {mesa ? numeroMesa(mesa.numero) : ""}</p>
       <Estado carregando={carregando} erro={erro && !mesa ? erro : null} onTentar={carregar} vazio={false}>
         <Tabs value={categoria} onValueChange={(valor) => setCategoria(valor as Categoria)} className="mt-6">
@@ -100,7 +100,7 @@ export function CardapioView() {
           {visiveis.map((produto) => {
             const semEstoque = produto.tipo === "DIRETO" && (produto.estoque?.quantidade ?? 0) === 0;
             return (
-              <li key={produto.id} className="rounded-md border border-salao-line bg-salao-card p-3">
+              <li key={produto.id} className="rounded-2xl border border-salao-line bg-salao-card p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 flex-1 basis-40">
                     <p className="font-medium break-words">{produto.nome}</p>

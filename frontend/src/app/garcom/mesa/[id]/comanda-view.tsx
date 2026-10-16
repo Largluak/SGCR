@@ -90,7 +90,7 @@ export function ComandaView() {
         {comanda ? (
           <>
             <header className="mt-4">
-              <h1 className="text-2xl font-semibold sm:text-3xl">Mesa {numeroMesa(comanda.mesa.numero)}</h1>
+              <h1 className="text-4xl text-salao-ink sm:text-5xl">Mesa {numeroMesa(comanda.mesa.numero)}</h1>
               <p className="mt-1 text-sm text-salao-muted">
                 {comanda.pessoas} pessoas · aberta há {haQuantoTempo(comanda.abertaEm)}
                 {comanda.aguardandoPagamento ? " · aguardando pagamento" : ""}
@@ -105,7 +105,7 @@ export function ComandaView() {
               {comanda.itens.map((item) => {
                 const pago = item.statusPagamento === "PAGO";
                 return (
-                  <li key={item.id} className="rounded-md border border-salao-line bg-salao-card p-3">
+                  <li key={item.id} className="rounded-2xl border border-salao-line bg-salao-card p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <p className="font-medium break-words">{item.produto.nome}</p>

@@ -36,8 +36,8 @@ export function Estado({
   }
   if (vazio) {
     return (
-      <div className="rounded-lg border border-dashed p-6">
-        <p className="font-medium">{tituloVazio}</p>
+      <div className="rounded-2xl border border-dashed border-border px-6 py-10">
+        <p className="text-xl">{tituloVazio}</p>
         {textoVazio ? (
           <p className="mt-1 text-sm text-muted-foreground">{textoVazio}</p>
         ) : null}
