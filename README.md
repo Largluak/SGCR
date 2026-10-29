@@ -2,7 +2,7 @@
 
 Sistema web para restaurantes de pequeno porte. O garçom abre comandas por mesa, lança o cardápio e fecha a conta no celular. O gerente cuida do cardápio, do estoque de bebidas e dos relatórios de vendas.
 
-O projeto segue o relatório técnico do SGCR: frontend em Next.js (instalável como PWA), API REST em NestJS e PostgreSQL. O protótipo visual de referência está em [sgcr-nine.vercel.app](https://sgcr-nine.vercel.app/). Esta versão roda primeiro na sua máquina. A hospedagem fica para um passo seguinte.
+O projeto segue o relatório técnico do SGCR: frontend em Next.js (instalável como PWA), API REST em NestJS e PostgreSQL. O protótipo visual de referência está em [sgcr-nine.vercel.app](https://sgcr-nine.vercel.app/). A versão deste repositório, para o orientador e a banca, está em [https://sgcr-comandas.vercel.app](https://sgcr-comandas.vercel.app).
 
 ## O que o sistema faz
 
@@ -68,12 +68,19 @@ npm test
 
 Os testes da API cobrem baixa e devolução de estoque, fechamento parcial, fechamento total, recusa de item já pago e o bloqueio do perfil garçom nas funções do gerente.
 
-## Hospedagem, depois
+## Versão publicada
 
-Quando o uso local estiver estável, o relatório prevê:
+Abra no navegador: [https://sgcr-comandas.vercel.app](https://sgcr-comandas.vercel.app)
 
-- frontend na Vercel
-- API em um serviço Node contínuo, como Render ou Railway
-- PostgreSQL gerenciado, como Neon
+Os acessos de demonstração da tabela acima valem nesse endereço. O site e a API estão na Vercel (plano Hobby) e o PostgreSQL está no Neon (plano Free).
 
-Defina `DATABASE_URL`, `JWT_SECRET`, `FRONTEND_ORIGIN` e `NEXT_PUBLIC_API_URL` nesses serviços e rode `npm run prisma:deploy` e o seed só se quiser os dados de demonstração. A comunicação precisa ser HTTPS.
+Para levar uma alteração sua até esse endereço, na pasta do projeto:
+
+```bash
+git pull origin main
+git push github main
+```
+
+O segundo comando é o que a Vercel acompanha. O `origin` deste clone é o remoto do Cursor.
+
+Nome e cor do restaurante ficam gravados no banco. A foto enviada em Aparência, nesta versão publicada, ainda depende de arquivo em disco e pode sumir num novo deploy.
