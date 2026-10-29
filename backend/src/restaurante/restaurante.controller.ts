@@ -17,7 +17,6 @@ import {
 import { MulterError } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Perfil } from '@prisma/client';
-import { createReadStream } from 'fs';
 import { Public } from '../common/public.decorator';
 import { Roles } from '../common/roles.decorator';
 import { AtualizarRestauranteDto } from './dto/atualizar-restaurante.dto';
@@ -78,7 +77,7 @@ export class RestauranteController {
     if (!arquivo) {
       throw new NotFoundException('O restaurante ainda não tem foto.');
     }
-    return new StreamableFile(createReadStream(arquivo.caminho), {
+    return new StreamableFile(arquivo.conteudo, {
       type: arquivo.tipo,
       disposition: `inline; filename="${arquivo.nome}"`,
     });

@@ -51,6 +51,8 @@ model Restaurante {
   nome          String
   corSecundaria String
   fotoArquivo   String?
+  fotoMime      String?
+  fotoDados     Bytes?
   atualizadoEm  DateTime @updatedAt
 }
 

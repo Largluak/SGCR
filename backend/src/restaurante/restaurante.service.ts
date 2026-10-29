@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { access, mkdir, readdir, rm, writeFile } from 'fs/promises';
+import { access, mkdir, readFile, readdir, rm, writeFile } from 'fs/promises';
 import path from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { COR_PADRAO, normalizarHex } from './cor';
@@ -69,14 +69,16 @@ export class RestauranteService {
       throw new BadRequestException('A foto precisa ter no máximo 2 MB.');
     }
     await this.garantir();
-    await mkdir(PASTA, { recursive: true });
-    await this.limparArquivos();
     const nome = `foto${extensao}`;
-    await writeFile(path.join(PASTA, nome), arquivo.buffer);
     const registro = await this.prisma.restaurante.update({
       where: { id: ID },
-      data: { fotoArquivo: nome },
+      data: {
+        fotoArquivo: nome,
+        fotoMime: arquivo.mimetype,
+        fotoDados: new Uint8Array(arquivo.buffer),
+      },
     });
+    await this.gravarCopiaLocal(nome, arquivo.buffer);
     return this.apresentar(registro);
   }
 
@@ -85,20 +87,28 @@ export class RestauranteService {
     await this.limparArquivos();
     const registro = await this.prisma.restaurante.update({
       where: { id: ID },
-      data: { fotoArquivo: null },
+      data: { fotoArquivo: null, fotoMime: null, fotoDados: null },
     });
     return this.apresentar(registro);
   }
 
   async lerFoto(): Promise<{
-    caminho: string;
+    conteudo: Buffer;
     tipo: string;
     nome: string;
   } | null> {
     const registro = await this.prisma.restaurante.findUnique({
       where: { id: ID },
     });
-    if (!registro?.fotoArquivo) return null;
+    if (!registro) return null;
+    if (registro.fotoDados && registro.fotoMime && TIPOS[registro.fotoMime]) {
+      return {
+        conteudo: Buffer.from(registro.fotoDados),
+        tipo: registro.fotoMime,
+        nome: `foto${TIPOS[registro.fotoMime]}`,
+      };
+    }
+    if (!registro.fotoArquivo) return null;
     const nome = path.basename(registro.fotoArquivo);
     const tipo = MIME[path.extname(nome).toLowerCase()];
     if (!tipo || !/^foto\.(jpg|jpeg|png|webp)$/.test(nome)) return null;
@@ -108,7 +118,7 @@ export class RestauranteService {
     } catch {
       return null;
     }
-    return { caminho, tipo, nome };
+    return { conteudo: await readFile(caminho), tipo, nome };
   }
 
   private async garantir() {
@@ -123,14 +133,31 @@ export class RestauranteService {
     nome: string;
     corSecundaria: string;
     fotoArquivo: string | null;
+    fotoMime: string | null;
+    fotoDados: Uint8Array | null;
     atualizadoEm: Date;
   }): RestaurantePublico {
+    const temFoto = Boolean(
+      (registro.fotoDados?.byteLength && registro.fotoMime) ||
+      registro.fotoArquivo,
+    );
     return {
       nome: registro.nome,
       corSecundaria: registro.corSecundaria,
-      fotoUrl: registro.fotoArquivo ? '/restaurante/foto' : null,
+      fotoUrl: temFoto ? '/restaurante/foto' : null,
       atualizadoEm: registro.atualizadoEm.toISOString(),
     };
+  }
+
+  private async gravarCopiaLocal(nome: string, conteudo: Buffer) {
+    try {
+      await mkdir(PASTA, { recursive: true });
+      await this.limparArquivos();
+      await writeFile(path.join(PASTA, nome), conteudo);
+    } catch {
+      // Na Vercel o disco não guarda arquivo entre requisições.
+      // A cópia que vale é a gravada no banco.
+    }
   }
 
   private async limparArquivos() {
