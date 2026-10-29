@@ -45,6 +45,24 @@ function comAutorizacao(headers: Headers) {
   return headers;
 }
 
+export async function baixarArquivo(path: string, nome: string) {
+  const headers = comAutorizacao(new Headers());
+  const resposta = await fetch(`${base}${path}`, { headers });
+  if (!resposta.ok) {
+    await lerResposta(resposta, path);
+    return;
+  }
+  const blob = await resposta.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = nome;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = comAutorizacao(new Headers(init?.headers));
   if (init?.body && !headers.has("Content-Type")) {

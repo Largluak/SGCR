@@ -12,7 +12,7 @@ O projeto segue o relatório técnico do SGCR: frontend em Next.js (instalável 
 - Fechamento total ou parcial por itens, com dinheiro, cartão ou Pix. A divisão por pessoa só aparece na tela.
 - Cardápio com produto direto (bebida) ou preparado (prato). Só o direto baixa estoque.
 - Alerta quando o estoque fica no mínimo ou abaixo.
-- Relatórios mensal, trimestral e semestral, só com comandas fechadas.
+- Relatórios mensal, trimestral e semestral em Excel, só com comandas fechadas. O gerente baixa o arquivo na tela de relatórios.
 
 Ficam de fora, como trabalho futuro do relatório: ficha técnica de insumos, uso offline com sincronização, vários restaurantes, nota fiscal e maquininha.
 

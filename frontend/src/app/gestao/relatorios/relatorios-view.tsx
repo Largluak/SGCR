@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, baixarArquivo } from "@/lib/api";
+import { Button } from "@/components/ui/button";
 import { reais } from "@/lib/format";
 import type { Relatorio } from "@/lib/types";
 import { Estado } from "@/components/estado";
@@ -27,6 +28,30 @@ const meses = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
+function parametrosDoRelatorio(
+  periodo: string,
+  ano: string,
+  mes: string,
+  trimestre: string,
+  semestre: string,
+) {
+  const params = new URLSearchParams({ periodo, ano });
+  if (periodo === "mensal") params.set("mes", mes);
+  if (periodo === "trimestral") params.set("trimestre", trimestre);
+  if (periodo === "semestral") params.set("semestre", semestre);
+  return params;
+}
+
+function nomeDoArquivo(periodo: string, rotulo: string) {
+  const base = rotulo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return `relatorio-${periodo}-${base}.xlsx`;
+}
+
 export function RelatoriosView() {
   const hoje = new Date();
   const [periodo, setPeriodo] = useState("semestral");
@@ -36,15 +61,14 @@ export function RelatoriosView() {
   const [semestre, setSemestre] = useState(hoje.getMonth() < 6 ? "1" : "2");
   const [dados, setDados] = useState<Relatorio | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const [baixando, setBaixando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [erroDownload, setErroDownload] = useState<string | null>(null);
 
   const carregar = useCallback(async () => {
     setCarregando(true);
     setErro(null);
-    const params = new URLSearchParams({ periodo, ano });
-    if (periodo === "mensal") params.set("mes", mes);
-    if (periodo === "trimestral") params.set("trimestre", trimestre);
-    if (periodo === "semestral") params.set("semestre", semestre);
+    const params = parametrosDoRelatorio(periodo, ano, mes, trimestre, semestre);
     try {
       setDados(await api<Relatorio>(`/relatorios?${params.toString()}`));
     } catch (error) {
@@ -53,6 +77,23 @@ export function RelatoriosView() {
       setCarregando(false);
     }
   }, [ano, mes, periodo, semestre, trimestre]);
+
+  async function baixar() {
+    if (!dados) return;
+    setBaixando(true);
+    setErroDownload(null);
+    const params = parametrosDoRelatorio(periodo, ano, mes, trimestre, semestre);
+    try {
+      await baixarArquivo(
+        `/relatorios/excel?${params.toString()}`,
+        nomeDoArquivo(periodo, dados.rotulo),
+      );
+    } catch (error) {
+      setErroDownload(error instanceof Error ? error.message : "Falha ao baixar o Excel.");
+    } finally {
+      setBaixando(false);
+    }
+  }
 
   useEffect(() => {
     void carregar();
@@ -113,7 +154,18 @@ export function RelatoriosView() {
             </SelectContent>
           </Select>
         ) : null}
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => void baixar()}
+          disabled={carregando || baixando || !dados}
+        >
+          {baixando ? "Baixando..." : "Baixar Excel"}
+        </Button>
       </div>
+      {erroDownload ? (
+        <p className="mt-2 text-sm text-destructive">{erroDownload}</p>
+      ) : null}
 
       <div className="mt-6">
         <Estado carregando={carregando} erro={erro} onTentar={carregar} vazio={false}>

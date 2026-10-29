@@ -1,7 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
 import { Perfil } from '@prisma/client';
 import { Roles } from '../common/roles.decorator';
 import { RelatorioQueryDto } from './dto/relatorio.dto';
+import { gerarPlanilha, nomeDoArquivo } from './planilha';
 import { RelatoriosService } from './relatorios.service';
 
 @Roles(Perfil.GERENTE)
@@ -17,5 +18,15 @@ export class RelatoriosController {
   @Get('relatorios')
   relatorio(@Query() query: RelatorioQueryDto) {
     return this.relatorios.relatorio(query);
+  }
+
+  @Get('relatorios/excel')
+  async excel(@Query() query: RelatorioQueryDto) {
+    const dados = await this.relatorios.relatorio(query);
+    const conteudo = await gerarPlanilha(dados);
+    return new StreamableFile(conteudo, {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      disposition: `attachment; filename="${nomeDoArquivo(dados.periodo, dados.rotulo)}"`,
+    });
   }
 }
