@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { RequireAuth, useAuth } from "@/components/auth-provider";
-import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
+import { MarcaLogo, MarcaNome, useMarca } from "@/components/marca-provider";
+import { CASA_KEY } from "@/lib/api";
 import { iniciais } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +22,18 @@ export function Painel({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { usuario, sair } = useAuth();
+  const { recarregar } = useMarca();
+  const casaCarregada = useRef("");
+
+  useEffect(() => {
+    const casa = new URLSearchParams(window.location.search).get("casa");
+    if (!casa) return;
+    window.localStorage.setItem(CASA_KEY, casa);
+    const chave = `${pathname}:${casa}`;
+    if (casaCarregada.current === chave) return;
+    casaCarregada.current = chave;
+    recarregar();
+  }, [pathname, recarregar]);
 
   const links =
     usuario?.perfil === "DESENVOLVEDOR"

@@ -39,9 +39,13 @@ async function lerResposta<T>(resposta: Response, path: string): Promise<T> {
   return dados as T;
 }
 
+export const CASA_KEY = "sgcr_casa";
+
 function comAutorizacao(headers: Headers) {
   const token = window.localStorage.getItem(TOKEN_KEY);
   if (token) headers.set("Authorization", `Bearer ${token}`);
+  const casa = window.localStorage.getItem(CASA_KEY);
+  if (casa) headers.set("x-casa", casa);
   return headers;
 }
 

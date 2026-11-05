@@ -56,6 +56,8 @@ model Restaurante {
   fotoDados     Bytes?
   atualizadoEm  DateTime  @updatedAt
   usuarios      Usuario[]
+  mesas         Mesa[]
+  produtos      Produto[]
 }
 
 model Usuario {
@@ -70,10 +72,14 @@ model Usuario {
 }
 
 model Mesa {
-  id       String    @id @default(cuid())
-  numero   Int       @unique
-  criadoEm DateTime  @default(now())
-  comandas Comanda[]
+  id            String      @id @default(cuid())
+  numero        Int
+  restauranteId String
+  restaurante   Restaurante @relation(fields: [restauranteId], references: [id])
+  criadoEm      DateTime    @default(now())
+  comandas      Comanda[]
+
+  @@unique([restauranteId, numero])
 }
 
 model Comanda {
@@ -94,15 +100,17 @@ model Comanda {
 }
 
 model Produto {
-  id        String           @id @default(cuid())
-  nome      String
-  descricao String?
-  categoria CategoriaProduto
-  preco     Decimal          @db.Decimal(10, 2)
-  tipo      TipoProduto
-  ativo     Boolean          @default(true)
-  estoque   Estoque?
-  itens     ItemComanda[]
+  id            String           @id @default(cuid())
+  nome          String
+  descricao     String?
+  categoria     CategoriaProduto
+  preco         Decimal          @db.Decimal(10, 2)
+  tipo          TipoProduto
+  ativo         Boolean          @default(true)
+  restauranteId String
+  restaurante   Restaurante      @relation(fields: [restauranteId], references: [id])
+  estoque       Estoque?
+  itens         ItemComanda[]
 }
 
 model Estoque {

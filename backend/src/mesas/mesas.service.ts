@@ -1,9 +1,11 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma, StatusComanda, StatusPagamentoItem } from '@prisma/client';
+import { casaAtual, filtroCasa } from '../common/casa';
 import { fromCents, toCents } from '../common/money';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -56,6 +58,7 @@ export class MesasService {
 
   async listar() {
     const mesas = await this.prisma.mesa.findMany({
+      where: filtroCasa(),
       orderBy: { numero: 'asc' },
       include: {
         comandas: {
@@ -90,7 +93,13 @@ export class MesasService {
 
   async criar(numero: number) {
     try {
-      const mesa = await this.prisma.mesa.create({ data: { numero } });
+      const restauranteId = casaAtual();
+      if (!restauranteId) {
+        throw new BadRequestException('Restaurante não definido.');
+      }
+      const mesa = await this.prisma.mesa.create({
+        data: { numero, restauranteId },
+      });
       return {
         id: mesa.id,
         numero: mesa.numero,
@@ -129,7 +138,8 @@ export class MesasService {
 
   private async buscar(id: string) {
     const mesa = await this.prisma.mesa.findUnique({ where: { id } });
-    if (!mesa) {
+    const casa = casaAtual();
+    if (!mesa || (casa && mesa.restauranteId !== casa)) {
       throw new NotFoundException('Mesa não encontrada.');
     }
     return mesa;

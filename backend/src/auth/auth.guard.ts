@@ -21,24 +21,37 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    if (isPublic) {
-      return true;
-    }
-
     const request = context.switchToHttp().getRequest<{
       headers: { authorization?: string };
       user?: AuthUser;
     }>();
+    if (isPublic) {
+      await this.anexar(request);
+      return true;
+    }
+
     const header = request.headers.authorization;
     if (!header?.startsWith('Bearer ')) {
       throw new UnauthorizedException('Faça login para continuar.');
     }
+    const usuario = await this.anexar(request);
+    if (!usuario) {
+      throw new UnauthorizedException('Sessão inválida ou expirada.');
+    }
+    return true;
+  }
 
+  private async anexar(request: {
+    headers: { authorization?: string };
+    user?: AuthUser;
+  }) {
+    const header = request.headers.authorization;
+    if (!header?.startsWith('Bearer ')) return null;
     try {
       request.user = await this.jwt.verifyAsync<AuthUser>(header.slice(7));
-      return true;
+      return request.user;
     } catch {
-      throw new UnauthorizedException('Sessão inválida ou expirada.');
+      return null;
     }
   }
 }

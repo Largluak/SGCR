@@ -7,6 +7,7 @@ import {
   ExceptionFilter,
   Get,
   NotFoundException,
+  Param,
   Patch,
   Post,
   StreamableFile,
@@ -71,9 +72,19 @@ export class RestauranteController {
   }
 
   @Public()
+  @Get('foto/:id')
+  async fotoDaCasa(@Param('id') id: string): Promise<StreamableFile> {
+    return this.enviar(id);
+  }
+
+  @Public()
   @Get('foto')
   async foto(): Promise<StreamableFile> {
-    const arquivo = await this.restaurante.lerFoto();
+    return this.enviar();
+  }
+
+  private async enviar(id?: string): Promise<StreamableFile> {
+    const arquivo = await this.restaurante.lerFoto(id);
     if (!arquivo) {
       throw new NotFoundException('O restaurante ainda não tem foto.');
     }

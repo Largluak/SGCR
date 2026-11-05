@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, StatusComanda, TipoProduto } from '@prisma/client';
+import { filtroCasa, filtroPelaMesa } from '../common/casa';
 import { fromCents, toCents } from '../common/money';
 import { statusDaMesa, totalDosItens } from '../mesas/mesas.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -26,6 +27,7 @@ export class RelatoriosService {
       await Promise.all([
         this.prisma.comanda.findMany({
           where: {
+            ...filtroPelaMesa(),
             OR: [
               { abertaEm: { gte: inicio, lt: fim } },
               { fechadaEm: { gte: inicio, lt: fim } },
@@ -34,19 +36,21 @@ export class RelatoriosService {
           include: { itens: true },
         }),
         this.prisma.comanda.findMany({
-          where: { status: StatusComanda.ABERTA },
+          where: { status: StatusComanda.ABERTA, ...filtroPelaMesa() },
           include: { mesa: true, itens: true },
           orderBy: { abertaEm: 'desc' },
         }),
         this.prisma.comanda.findMany({
-          where: { status: StatusComanda.FECHADA },
+          where: { status: StatusComanda.FECHADA, ...filtroPelaMesa() },
           include: { mesa: true, itens: true },
           orderBy: { fechadaEm: 'desc' },
           take: 5,
         }),
-        this.prisma.mesa.count(),
+        this.prisma.mesa.count({ where: filtroCasa() }),
         this.prisma.estoque.findMany({
-          where: { produto: { tipo: TipoProduto.DIRETO, ativo: true } },
+          where: {
+            produto: { tipo: TipoProduto.DIRETO, ativo: true, ...filtroCasa() },
+          },
           include: { produto: true },
           orderBy: { quantidade: 'asc' },
         }),
@@ -98,6 +102,7 @@ export class RelatoriosService {
     const intervalo = intervaloDoPeriodo(query);
     const comandas = await this.prisma.comanda.findMany({
       where: {
+        ...filtroPelaMesa(),
         status: StatusComanda.FECHADA,
         fechadaEm: { gte: intervalo.inicio, lt: intervalo.fim },
       },

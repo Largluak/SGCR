@@ -103,7 +103,11 @@ async function main() {
 
   const mesas: { id: string }[] = [];
   for (let numero = 1; numero <= 12; numero += 1) {
-    mesas.push(await prisma.mesa.create({ data: { numero } }));
+    mesas.push(
+      await prisma.mesa.create({
+        data: { numero, restauranteId: 'principal' },
+      }),
+    );
   }
 
   const produtos: { id: string; nome: string; preco: Prisma.Decimal }[] = [];
@@ -116,6 +120,7 @@ async function main() {
           categoria: item.categoria,
           preco: item.preco.toFixed(2),
           tipo: item.tipo,
+          restauranteId: 'principal',
           estoque:
             item.tipo === TipoProduto.DIRETO
               ? { create: { quantidade: item.quantidade ?? 0, minimo: item.minimo ?? 5 } }

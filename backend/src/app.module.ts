@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
+import { CasaInterceptor } from './common/casa';
 import { AuthModule } from './auth/auth.module';
 import { RolesGuard } from './common/roles.guard';
 import { ComandasModule } from './comandas/comandas.module';
@@ -31,6 +32,7 @@ import { UsuariosModule } from './usuarios/usuarios.module';
   providers: [
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_INTERCEPTOR, useClass: CasaInterceptor },
   ],
 })
 export class AppModule {}

@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { TipoMovimentacao, TipoProduto } from '@prisma/client';
+import { casaAtual, filtroCasa } from '../common/casa';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -12,7 +13,9 @@ export class EstoqueService {
 
   async listar() {
     const itens = await this.prisma.estoque.findMany({
-      where: { produto: { tipo: TipoProduto.DIRETO, ativo: true } },
+      where: {
+        produto: { tipo: TipoProduto.DIRETO, ativo: true, ...filtroCasa() },
+      },
       include: { produto: true },
       orderBy: { produto: { nome: 'asc' } },
     });
@@ -85,7 +88,8 @@ export class EstoqueService {
       where: { id: produtoId },
       include: { estoque: true },
     });
-    if (!produto) {
+    const casa = casaAtual();
+    if (!produto || (casa && produto.restauranteId !== casa)) {
       throw new NotFoundException('Produto não encontrado.');
     }
     if (produto.tipo !== TipoProduto.DIRETO || !produto.estoque) {

@@ -2,9 +2,9 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/api";
+import { api, CASA_KEY } from "@/lib/api";
 import { useAuth } from "@/components/auth-provider";
-import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
+import { MarcaLogo, MarcaNome, useMarca } from "@/components/marca-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import { destinoDoPerfil } from "@/lib/types";
 export function LoginForm() {
   const router = useRouter();
   const { usuario, pronto, entrar } = useAuth();
+  const { recarregar } = useMarca();
   const [email, setEmail] = useState("carla.souza@ardosia.local");
   const [senha, setSenha] = useState("gerente123");
   const [erro, setErro] = useState<string | null>(null);
@@ -36,7 +37,11 @@ export function LoginForm() {
           body: JSON.stringify({ email, senha }),
         },
       );
+      if (resposta.usuario.perfil !== "DESENVOLVEDOR") {
+        window.localStorage.removeItem(CASA_KEY);
+      }
       entrar(resposta.accessToken, resposta.usuario);
+      recarregar();
       router.push(destinoDoPerfil(resposta.usuario.perfil));
     } catch (error) {
       setErro(error instanceof Error ? error.message : "Falha no login.");
@@ -117,6 +122,14 @@ export function LoginForm() {
               joao.ribeiro@ardosia.local
               <br />
               senha garcom123
+            </span>
+          </p>
+          <p>
+            Patricia, gerente do Rancho do Didi
+            <span className="mt-1 block font-mono text-xs">
+              patricia.melo@ranchododidi.local
+              <br />
+              senha patricia123
             </span>
           </p>
           <p>

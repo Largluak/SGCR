@@ -12,6 +12,7 @@ import {
   TipoMovimentacao,
   TipoProduto,
 } from '@prisma/client';
+import { casaAtual, filtroPelaMesa } from '../common/casa';
 import { fromCents, toCents } from '../common/money';
 import { totalDosItens } from '../mesas/mesas.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -36,7 +37,8 @@ export class ComandasService {
 
   async abrir(mesaId: string, pessoas: number) {
     const mesa = await this.prisma.mesa.findUnique({ where: { id: mesaId } });
-    if (!mesa) {
+    const casa = casaAtual();
+    if (!mesa || (casa && mesa.restauranteId !== casa)) {
       throw new NotFoundException('Mesa não encontrada.');
     }
     const aberta = await this.prisma.comanda.findFirst({
@@ -54,6 +56,7 @@ export class ComandasService {
 
   async listar() {
     const comandas = await this.prisma.comanda.findMany({
+      where: filtroPelaMesa(),
       orderBy: { abertaEm: 'desc' },
       include: comandaInclude,
       take: 50,
@@ -89,7 +92,12 @@ export class ComandasService {
         where: { id: produtoId },
         include: { estoque: true },
       });
-      if (!produto || !produto.ativo) {
+      const casa = casaAtual();
+      if (
+        !produto ||
+        !produto.ativo ||
+        (casa && produto.restauranteId !== casa)
+      ) {
         throw new NotFoundException('Produto não encontrado.');
       }
       await this.baixarEstoque(
@@ -344,7 +352,8 @@ export class ComandasService {
       where: { id },
       include: comandaInclude,
     });
-    if (!comanda) {
+    const casa = casaAtual();
+    if (!comanda || (casa && comanda.mesa.restauranteId !== casa)) {
       throw new NotFoundException('Comanda não encontrada.');
     }
     return comanda;

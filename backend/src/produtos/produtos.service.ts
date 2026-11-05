@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, TipoProduto } from '@prisma/client';
+import { casaAtual, filtroCasa } from '../common/casa';
 import { fromCents, toCents } from '../common/money';
 import { PrismaService } from '../prisma/prisma.service';
 import { SalvarProdutoDto } from './dto/produto.dto';
@@ -15,7 +16,7 @@ export class ProdutosService {
 
   async listar(incluirInativos: boolean) {
     const produtos = await this.prisma.produto.findMany({
-      where: incluirInativos ? {} : { ativo: true },
+      where: { ...filtroCasa(), ...(incluirInativos ? {} : { ativo: true }) },
       include: produtoInclude,
       orderBy: [{ categoria: 'asc' }, { nome: 'asc' }],
     });
@@ -31,6 +32,7 @@ export class ProdutosService {
         preco: dto.preco.toFixed(2),
         tipo: dto.tipo,
         ativo: dto.ativo ?? true,
+        restauranteId: this.casaDoProduto(),
         estoque:
           dto.tipo === TipoProduto.DIRETO
             ? { create: { quantidade: 0, minimo: dto.minimo ?? 5 } }
@@ -46,7 +48,7 @@ export class ProdutosService {
       where: { id },
       include: produtoInclude,
     });
-    if (!atual) {
+    if (!atual || !this.daCasa(atual.restauranteId)) {
       throw new NotFoundException('Produto não encontrado.');
     }
 
@@ -85,7 +87,7 @@ export class ProdutosService {
       where: { id },
       include: { _count: { select: { itens: true } } },
     });
-    if (!produto) {
+    if (!produto || !this.daCasa(produto.restauranteId)) {
       throw new NotFoundException('Produto não encontrado.');
     }
     if (produto._count.itens > 0) {
@@ -97,6 +99,19 @@ export class ProdutosService {
     }
     await this.prisma.produto.delete({ where: { id } });
     return { removido: true, desativado: false };
+  }
+
+  private casaDoProduto() {
+    const restauranteId = casaAtual();
+    if (!restauranteId) {
+      throw new BadRequestException('Restaurante não definido.');
+    }
+    return restauranteId;
+  }
+
+  private daCasa(restauranteId: string) {
+    const casa = casaAtual();
+    return !casa || restauranteId === casa;
   }
 
   private apresentar(produto: ProdutoComEstoque) {

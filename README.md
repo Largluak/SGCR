@@ -14,7 +14,7 @@ O projeto segue o relatório técnico do SGCR: frontend em Next.js (instalável 
 - Alerta quando o estoque fica no mínimo ou abaixo.
 - Relatórios mensal, trimestral e semestral em Excel, só com comandas fechadas. O gerente baixa o arquivo na tela de relatórios.
 
-Ficam de fora, como trabalho futuro do relatório: ficha técnica de insumos, uso offline com sincronização, vários restaurantes, nota fiscal e maquininha.
+Cada casa tem o próprio cardápio, as próprias mesas e a própria equipe. Ficam de fora, como trabalho futuro do relatório: ficha técnica de insumos, uso offline com sincronização, nota fiscal e maquininha.
 
 ## O que instalar no seu computador
 
@@ -56,12 +56,15 @@ O `db:setup` gera o cliente do Prisma, aplica as tabelas e carrega o restaurante
 | Desenvolvedor | desenvolvedor@sgcr.local | desenvolvedor123 |
 | Gerente | carla.souza@ardosia.local | gerente123 |
 | Garçom | joao.ribeiro@ardosia.local | garcom123 |
+| Gerente do Rancho do Didi | patricia.melo@ranchododidi.local | patricia123 |
 
 As senhas ficam gravadas com hash. Troque `JWT_SECRET` no `backend/.env` se for sair do uso local.
 
 Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência troca o nome, a foto e a cor de destaque do restaurante. O painel continua claro, o salão continua escuro, e as cores de confirmar, cancelar e alerta permanecem as mesmas.
 
-O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente não veem esse usuário na equipe.
+O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente só enxergam a própria casa. O desenvolvedor não aparece na equipe.
+
+O Rancho do Didi entra com a gerente Patricia Melo, 8 mesas e o cardápio da foto. As bebidas começam com 24 unidades no estoque, porque a foto não informa a quantidade. A cor de destaque é o terracota do cardápio, `#C45C26`.
 
 ## Testes
 

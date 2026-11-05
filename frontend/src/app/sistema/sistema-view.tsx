@@ -8,7 +8,7 @@ import { Estado } from "@/components/estado";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { api } from "@/lib/api";
+import { api, CASA_KEY } from "@/lib/api";
 import { iniciais } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -23,9 +23,17 @@ type Gerente = {
   restaurante: { id: string; nome: string } | null;
 };
 
+type Casa = {
+  id: string;
+  nome: string;
+  corSecundaria: string;
+  mesas: number;
+  comandasAbertas: number;
+  garcons: number;
+};
+
 type PainelSistema = {
-  restaurantes: { id: string; nome: string; corSecundaria: string }[];
-  operacao: { mesas: number; comandasAbertas: number; garcons: number };
+  restaurantes: Casa[];
   gerentes: Gerente[];
 };
 
@@ -155,14 +163,15 @@ function SistemaConteudo() {
                     <div className="min-w-0">
                       <p className="truncate font-heading text-2xl leading-none">{casa.nome}</p>
                       <p className="mt-1 text-sm text-muted-foreground">
-                        {conta(painel.operacao.mesas, "mesa", "mesas")} ·{" "}
-                        {conta(painel.operacao.comandasAbertas, "comanda aberta", "comandas abertas")} ·{" "}
-                        {conta(painel.operacao.garcons, "garçom", "garçons")}
+                        {conta(casa.mesas, "mesa", "mesas")} ·{" "}
+                        {conta(casa.comandasAbertas, "comanda aberta", "comandas abertas")} ·{" "}
+                        {conta(casa.garcons, "garçom", "garçons")}
                       </p>
                     </div>
                   </div>
                   <Link
-                    href="/gestao"
+                    href={`/gestao?casa=${casa.id}`}
+                    onClick={() => window.localStorage.setItem(CASA_KEY, casa.id)}
                     className={cn(buttonVariants({ variant: "outline", size: "sm" }), "shrink-0")}
                   >
                     Gestão da casa

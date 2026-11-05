@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Perfil } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import { casaAtual, filtroCasa } from '../common/casa';
 import { PrismaService } from '../prisma/prisma.service';
 import { CriarGarcomDto } from './dto/criar-garcom.dto';
 import { CriarGerenteDto } from './dto/criar-gerente.dto';
@@ -23,7 +24,7 @@ export class UsuariosService {
 
   async listar() {
     const usuarios = await this.prisma.usuario.findMany({
-      where: { perfil: { not: Perfil.DESENVOLVEDOR } },
+      where: { perfil: { not: Perfil.DESENVOLVEDOR }, ...filtroCasa() },
       select: publico,
       orderBy: { nome: 'asc' },
     });
@@ -41,7 +42,7 @@ export class UsuariosService {
     if (existente) {
       throw new ConflictException('Já existe um acesso com esse e-mail.');
     }
-    const restauranteId = await this.restauranteDoGarcom();
+    const restauranteId = casaAtual() ?? (await this.restauranteDoGarcom());
     return this.prisma.usuario.create({
       select: publico,
       data: {
@@ -88,6 +89,7 @@ export class UsuariosService {
     if (usuario.perfil !== Perfil.GERENTE) {
       throw new BadRequestException('Só é possível remover um gerente.');
     }
+    this.garantirCasa(usuario.restauranteId, 'Gerente não encontrado.');
     await this.prisma.usuario.delete({ where: { id } });
     return { ok: true };
   }
@@ -100,8 +102,16 @@ export class UsuariosService {
     if (usuario.perfil !== Perfil.GARCOM) {
       throw new BadRequestException('Só é possível remover um garçom.');
     }
+    this.garantirCasa(usuario.restauranteId, 'Garçom não encontrado.');
     await this.prisma.usuario.delete({ where: { id } });
     return { ok: true };
+  }
+
+  private garantirCasa(restauranteId: string | null, mensagem: string) {
+    const casa = casaAtual();
+    if (casa && restauranteId !== casa) {
+      throw new NotFoundException(mensagem);
+    }
   }
 
   private async restauranteDoGarcom() {
