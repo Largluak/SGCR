@@ -55,6 +55,8 @@ function SistemaConteudo() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [restauranteId, setRestauranteId] = useState("");
+  const [restauranteNome, setRestauranteNome] = useState("");
+  const [mesas, setMesas] = useState("8");
   const [salvando, setSalvando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
 
@@ -64,7 +66,7 @@ function SistemaConteudo() {
     try {
       const dados = await api<PainelSistema>("/sistema");
       setPainel(dados);
-      setRestauranteId((atual) => atual || dados.restaurantes[0]?.id || "");
+      setRestauranteId((atual) => atual || dados.restaurantes[0]?.id || "novo");
     } catch (error) {
       setErro(error instanceof Error ? error.message : "Falha ao carregar o sistema.");
     } finally {
@@ -80,6 +82,7 @@ function SistemaConteudo() {
     event.preventDefault();
     setSalvando(true);
     setAviso(null);
+    const casaNova = restauranteId === "novo";
     try {
       await api("/sistema/gerentes", {
         method: "POST",
@@ -87,12 +90,16 @@ function SistemaConteudo() {
           nome: nome.trim(),
           email: email.trim(),
           senha,
-          restauranteId,
+          ...(casaNova
+            ? { restauranteNome: restauranteNome.trim(), mesas: Number(mesas) }
+            : { restauranteId }),
         }),
       });
       setNome("");
       setEmail("");
       setSenha("");
+      setRestauranteNome("");
+      setMesas("8");
       await carregar();
     } catch (error) {
       setAviso(error instanceof Error ? error.message : "Não foi possível cadastrar o gerente.");
@@ -135,19 +142,18 @@ function SistemaConteudo() {
         <h1 className="mt-1 text-4xl sm:text-5xl">Sistema</h1>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
           {usuario?.nome} vê os restaurantes que estão no ar e cadastra quem gerencia a casa.
+          O gerente pode entrar numa casa que já existe ou numa casa nova, criada junto com ele.
           O garçom continua sendo criado pelo gerente, em Equipe.
         </p>
 
-        <Estado
-          carregando={carregando}
-          erro={erro}
-          onTentar={carregar}
-          vazio={!carregando && !erro && (painel?.restaurantes.length ?? 0) === 0}
-          tituloVazio="Nenhum restaurante no sistema"
-          textoVazio="Quando uma casa for cadastrada, ela aparece aqui."
-        >
+        <Estado carregando={carregando} erro={erro} onTentar={carregar}>
           <section className="mt-8">
             <h2 className="font-medium">Restaurantes</h2>
+            {(painel?.restaurantes.length ?? 0) === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">
+                Nenhuma casa cadastrada. O primeiro gerente pode entrar com um restaurante novo.
+              </p>
+            ) : (
             <ul className="mt-3 space-y-3">
               {painel?.restaurantes.map((casa) => (
                 <li
@@ -179,6 +185,7 @@ function SistemaConteudo() {
                 </li>
               ))}
             </ul>
+            )}
           </section>
 
           <form onSubmit={adicionar} className="mt-8 space-y-4 rounded-xl border bg-card p-4">
@@ -192,6 +199,7 @@ function SistemaConteudo() {
                 onChange={(event) => setRestauranteId(event.target.value)}
                 required
               >
+                <option value="novo">Restaurante novo</option>
                 {painel?.restaurantes.map((casa) => (
                   <option key={casa.id} value={casa.id}>
                     {casa.nome}
@@ -199,6 +207,32 @@ function SistemaConteudo() {
                 ))}
               </select>
             </div>
+            {restauranteId === "novo" ? (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="nome-casa">Nome do restaurante</Label>
+                  <Input
+                    id="nome-casa"
+                    value={restauranteNome}
+                    onChange={(event) => setRestauranteNome(event.target.value)}
+                    required
+                    minLength={2}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="mesas-casa">Mesas</Label>
+                  <Input
+                    id="mesas-casa"
+                    type="number"
+                    min={1}
+                    max={40}
+                    value={mesas}
+                    onChange={(event) => setMesas(event.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            ) : null}
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="nome-gerente">Nome</Label>
@@ -236,7 +270,11 @@ function SistemaConteudo() {
             </div>
             {aviso ? <p className="text-sm text-destructive">{aviso}</p> : null}
             <Button type="submit" disabled={salvando}>
-              {salvando ? "Salvando..." : "Cadastrar gerente"}
+              {salvando
+                ? "Salvando..."
+                : restauranteId === "novo"
+                  ? "Cadastrar casa e gerente"
+                  : "Cadastrar gerente"}
             </Button>
           </form>
 

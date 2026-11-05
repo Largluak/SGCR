@@ -61,7 +61,7 @@ As senhas ficam gravadas com hash. Troque `JWT_SECRET` no `backend/.env` se for 
 
 Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência troca o nome, a foto e a cor de destaque do restaurante. O painel continua claro, o salão continua escuro, e as cores de confirmar, cancelar e alerta permanecem as mesmas.
 
-O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente só enxergam a própria casa. O desenvolvedor não aparece na equipe.
+O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. O gerente pode entrar numa casa que já existe ou numa casa nova, criada na hora com as mesas informadas. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente só enxergam a própria casa. O desenvolvedor não aparece na equipe.
 
 O Rancho do Didi entra com a gerente Patricia Melo, 8 mesas e o cardápio da foto. Há comandas de exemplo de julho a novembro, duas delas ainda abertas, para a casa não aparecer vazia. As bebidas começam com 24 unidades, porque a foto não informa a quantidade, e as vendas de exemplo baixam esse estoque. A cor de destaque é o terracota do cardápio, `#C45C26`. O acesso dela não fica na tela de login, para não ficar público.
 

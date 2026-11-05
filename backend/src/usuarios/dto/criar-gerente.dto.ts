@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export class CriarGerenteDto {
   @IsString()
@@ -15,7 +15,20 @@ export class CriarGerenteDto {
   @MaxLength(72)
   senha!: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(1, { message: 'Escolha o restaurante do gerente.' })
-  restauranteId!: string;
+  restauranteId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(2, { message: 'Informe o nome do restaurante.' })
+  @MaxLength(80)
+  restauranteNome?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1, { message: 'A casa nova precisa de pelo menos uma mesa.' })
+  @Max(40, { message: 'Cadastre no máximo 40 mesas de uma vez.' })
+  mesas?: number;
 }

@@ -14,7 +14,13 @@ describe('UsuariosService', () => {
     restaurante: {
       findUnique: jest.fn(),
       findFirst: jest.fn(),
+      findMany: jest.fn(),
+      create: jest.fn(),
     },
+    mesa: {
+      createMany: jest.fn(),
+    },
+    $transaction: jest.fn(),
   };
   const service = new UsuariosService(prisma as unknown as PrismaService);
 
@@ -88,6 +94,53 @@ describe('UsuariosService', () => {
           email: 'rita@ardosia.local',
           perfil: Perfil.GERENTE,
           restauranteId: 'principal',
+        }) as unknown,
+      }),
+    );
+  });
+
+  it('cria a casa nova junto com o gerente', async () => {
+    prisma.usuario.findUnique.mockResolvedValue(null);
+    prisma.restaurante.findFirst.mockResolvedValue(null);
+    prisma.restaurante.findUnique.mockResolvedValue(null);
+    prisma.restaurante.findMany.mockResolvedValue([
+      { corSecundaria: '#B08968' },
+      { corSecundaria: '#C45C26' },
+    ]);
+    prisma.$transaction.mockImplementation(async (acao: (tx: typeof prisma) => unknown) =>
+      acao(prisma),
+    );
+    prisma.usuario.create.mockResolvedValue({
+      id: 'g3',
+      nome: 'Lia Costa',
+      email: 'lia@casa.local',
+      perfil: Perfil.GERENTE,
+    });
+
+    await service.criarGerente({
+      nome: 'Lia Costa',
+      email: 'lia@casa.local',
+      senha: 'senha123',
+      restauranteNome: 'Casa Nova',
+      mesas: 4,
+    });
+
+    expect(prisma.restaurante.create).toHaveBeenCalledWith({
+      data: { id: 'casa-nova', nome: 'Casa Nova', corSecundaria: '#2F5D50' },
+    });
+    expect(prisma.mesa.createMany).toHaveBeenCalledWith({
+      data: [
+        { numero: 1, restauranteId: 'casa-nova' },
+        { numero: 2, restauranteId: 'casa-nova' },
+        { numero: 3, restauranteId: 'casa-nova' },
+        { numero: 4, restauranteId: 'casa-nova' },
+      ],
+    });
+    expect(prisma.usuario.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          restauranteId: 'casa-nova',
+          perfil: Perfil.GERENTE,
         }) as unknown,
       }),
     );

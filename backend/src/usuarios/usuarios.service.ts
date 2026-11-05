@@ -7,6 +7,7 @@ import {
 import { Perfil } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { casaAtual, filtroCasa } from '../common/casa';
+import { COR_PADRAO } from '../restaurante/cor';
 import { PrismaService } from '../prisma/prisma.service';
 import { CriarGarcomDto } from './dto/criar-garcom.dto';
 import { CriarGerenteDto } from './dto/criar-gerente.dto';
@@ -63,6 +64,15 @@ export class UsuariosService {
     if (existente) {
       throw new ConflictException('Já existe um acesso com esse e-mail.');
     }
+    const nomeDaCasa = dto.restauranteNome?.trim();
+    if (nomeDaCasa) {
+      return this.criarCasaEGerente(dto, email, nomeDaCasa);
+    }
+    if (!dto.restauranteId) {
+      throw new BadRequestException(
+        'Escolha um restaurante ou informe o nome da casa nova.',
+      );
+    }
     const casa = await this.prisma.restaurante.findUnique({
       where: { id: dto.restauranteId },
     });
@@ -105,6 +115,72 @@ export class UsuariosService {
     this.garantirCasa(usuario.restauranteId, 'Garçom não encontrado.');
     await this.prisma.usuario.delete({ where: { id } });
     return { ok: true };
+  }
+
+  private async criarCasaEGerente(
+    dto: CriarGerenteDto,
+    email: string,
+    nomeDaCasa: string,
+  ) {
+    const repetida = await this.prisma.restaurante.findFirst({
+      where: { nome: { equals: nomeDaCasa, mode: 'insensitive' } },
+    });
+    if (repetida) {
+      throw new ConflictException('Já existe um restaurante com esse nome.');
+    }
+    const id = await this.idLivre(nomeDaCasa);
+    const cor = await this.corLivre();
+    const mesas = dto.mesas ?? 8;
+    const senhaHash = await bcrypt.hash(dto.senha, 10);
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.restaurante.create({
+        data: { id, nome: nomeDaCasa, corSecundaria: cor },
+      });
+      await tx.mesa.createMany({
+        data: Array.from({ length: mesas }, (_, indice) => ({
+          numero: indice + 1,
+          restauranteId: id,
+        })),
+      });
+      return tx.usuario.create({
+        select: publico,
+        data: {
+          nome: dto.nome.trim(),
+          email,
+          senhaHash,
+          perfil: Perfil.GERENTE,
+          restauranteId: id,
+        },
+      });
+    });
+  }
+
+  private async idLivre(nome: string) {
+    const base =
+      nome
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 40) || 'casa';
+    let id = base;
+    let sufixo = 2;
+    while (await this.prisma.restaurante.findUnique({ where: { id } })) {
+      id = `${base}-${sufixo}`;
+      sufixo += 1;
+    }
+    return id;
+  }
+
+  private async corLivre() {
+    const paleta = ['#C45C26', '#2F5D50', '#3D4C7A', '#8A6A2F', '#6B2E1A', COR_PADRAO];
+    const casas = await this.prisma.restaurante.findMany({
+      select: { corSecundaria: true },
+    });
+    const usadas = new Set(casas.map((casa) => casa.corSecundaria.toUpperCase()));
+    return paleta.find((cor) => !usadas.has(cor.toUpperCase())) ?? COR_PADRAO;
   }
 
   private garantirCasa(restauranteId: string | null, mensagem: string) {

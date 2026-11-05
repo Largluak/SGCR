@@ -1,4 +1,4 @@
-import { Workbook, type Worksheet } from 'exceljs';
+import { Workbook, type ConditionalFormattingRule, type Worksheet } from 'exceljs';
 
 export type LinhaProduto = {
   nome: string;
@@ -158,15 +158,7 @@ function montarMeses(planilha: Worksheet, dados: DadosPlanilha) {
   if (dados.vendasPorMes.some((item) => item.total > 0)) {
     planilha.addConditionalFormatting({
       ref: `B5:B${fim}`,
-      rules: [
-        {
-          type: 'dataBar',
-          gradient: false,
-          showValue: true,
-          cfvo: [{ type: 'num', value: 0 }, { type: 'max' }],
-          color: { argb: TERRACOTA },
-        },
-      ],
+      rules: [barra()],
     });
   }
   planilha.views = [{ showGridLines: false, state: 'frozen', ySplit: 4 }];
@@ -207,18 +199,23 @@ function montarProdutos(planilha: Worksheet, dados: DadosPlanilha) {
   const fim = 4 + dados.ranking.length;
   planilha.addConditionalFormatting({
     ref: `D5:D${fim}`,
-    rules: [
-      {
-        type: 'dataBar',
-        gradient: false,
-        showValue: true,
-        cfvo: [{ type: 'num', value: 0 }, { type: 'max' }],
-        color: { argb: TERRACOTA },
-      },
-    ],
+    rules: [barra()],
   });
   planilha.views = [{ showGridLines: false, state: 'frozen', ySplit: 4 }];
   planilha.autoFilter = { from: 'A4', to: `D${fim}` };
+}
+
+function barra(): ConditionalFormattingRule {
+  return {
+    type: 'dataBar',
+    gradient: false,
+    showValue: true,
+    cfvo: [
+      { type: 'num', value: 0 },
+      { type: 'max' },
+    ],
+    color: { argb: TERRACOTA },
+  } as unknown as ConditionalFormattingRule;
 }
 
 function titulo(planilha: Worksheet, tituloTexto: string, rotulo: string) {
