@@ -48,22 +48,25 @@ enum TipoMovimentacao {
 }
 
 model Restaurante {
-  id            String   @id
+  id            String    @id
   nome          String
   corSecundaria String
   fotoArquivo   String?
   fotoMime      String?
   fotoDados     Bytes?
-  atualizadoEm  DateTime @updatedAt
+  atualizadoEm  DateTime  @updatedAt
+  usuarios      Usuario[]
 }
 
 model Usuario {
-  id        String   @id @default(cuid())
-  nome      String
-  email     String   @unique
-  senhaHash String
-  perfil    Perfil
-  criadoEm  DateTime @default(now())
+  id            String       @id @default(cuid())
+  nome          String
+  email         String       @unique
+  senhaHash     String
+  perfil        Perfil
+  restauranteId String?
+  restaurante   Restaurante? @relation(fields: [restauranteId], references: [id])
+  criadoEm      DateTime     @default(now())
 }
 
 model Mesa {

@@ -5,17 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RequireAuth, useAuth } from "@/components/auth-provider";
 import { Estado } from "@/components/estado";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
 import { iniciais } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 function conta(quantidade: number, singular: string, plural: string) {
   return `${quantidade} ${quantidade === 1 ? singular : plural}`;
 }
 
-type Gerente = { id: string; nome: string; email: string };
+type Gerente = {
+  id: string;
+  nome: string;
+  email: string;
+  restaurante: { id: string; nome: string } | null;
+};
 
 type PainelSistema = {
   restaurantes: { id: string; nome: string; corSecundaria: string }[];
@@ -40,6 +46,7 @@ function SistemaConteudo() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [restauranteId, setRestauranteId] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [aviso, setAviso] = useState<string | null>(null);
 
@@ -47,7 +54,9 @@ function SistemaConteudo() {
     setCarregando(true);
     setErro(null);
     try {
-      setPainel(await api<PainelSistema>("/sistema"));
+      const dados = await api<PainelSistema>("/sistema");
+      setPainel(dados);
+      setRestauranteId((atual) => atual || dados.restaurantes[0]?.id || "");
     } catch (error) {
       setErro(error instanceof Error ? error.message : "Falha ao carregar o sistema.");
     } finally {
@@ -66,7 +75,12 @@ function SistemaConteudo() {
     try {
       await api("/sistema/gerentes", {
         method: "POST",
-        body: JSON.stringify({ nome: nome.trim(), email: email.trim(), senha }),
+        body: JSON.stringify({
+          nome: nome.trim(),
+          email: email.trim(),
+          senha,
+          restauranteId,
+        }),
       });
       setNome("");
       setEmail("");
@@ -128,8 +142,11 @@ function SistemaConteudo() {
             <h2 className="font-medium">Restaurantes</h2>
             <ul className="mt-3 space-y-3">
               {painel?.restaurantes.map((casa) => (
-                <li key={casa.id} className="rounded-xl border bg-card p-4">
-                  <div className="flex items-center gap-3">
+                <li
+                  key={casa.id}
+                  className="flex items-center justify-between gap-3 rounded-xl border bg-card p-4"
+                >
+                  <div className="flex min-w-0 items-center gap-3">
                     <span
                       className="size-9 shrink-0 rounded-full border border-border"
                       style={{ backgroundColor: casa.corSecundaria }}
@@ -144,19 +161,35 @@ function SistemaConteudo() {
                       </p>
                     </div>
                   </div>
+                  <Link
+                    href="/gestao"
+                    className={cn(buttonVariants({ variant: "outline", size: "sm" }), "shrink-0")}
+                  >
+                    Gestão da casa
+                  </Link>
                 </li>
               ))}
             </ul>
-            <Link
-              href="/gestao"
-              className="mt-4 inline-flex min-h-11 items-center text-sm underline underline-offset-4"
-            >
-              Abrir a gestão da casa
-            </Link>
           </section>
 
           <form onSubmit={adicionar} className="mt-8 space-y-4 rounded-xl border bg-card p-4">
             <h2 className="font-medium">Novo gerente</h2>
+            <div className="space-y-2">
+              <Label htmlFor="restaurante-gerente">Restaurante</Label>
+              <select
+                id="restaurante-gerente"
+                className="h-11 w-full rounded-[0.7rem] border border-input bg-card/60 px-3 text-base lg:h-8 lg:text-sm"
+                value={restauranteId}
+                onChange={(event) => setRestauranteId(event.target.value)}
+                required
+              >
+                {painel?.restaurantes.map((casa) => (
+                  <option key={casa.id} value={casa.id}>
+                    {casa.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="nome-gerente">Nome</Label>
@@ -213,6 +246,9 @@ function SistemaConteudo() {
                       <div className="min-w-0">
                         <p className="truncate font-medium">{gerente.nome}</p>
                         <p className="truncate text-sm text-muted-foreground">{gerente.email}</p>
+                        <p className="truncate text-sm text-muted-foreground">
+                          {gerente.restaurante?.nome ?? "Sem restaurante"}
+                        </p>
                       </div>
                     </div>
                     <Button
@@ -220,7 +256,6 @@ function SistemaConteudo() {
                       size="sm"
                       variant="destructive"
                       onClick={() => void remover(gerente)}
-                      disabled={(painel?.gerentes.length ?? 0) <= 1}
                     >
                       Remover
                     </Button>

@@ -41,6 +41,7 @@ export class UsuariosService {
     if (existente) {
       throw new ConflictException('Já existe um acesso com esse e-mail.');
     }
+    const restauranteId = await this.restauranteDoGarcom();
     return this.prisma.usuario.create({
       select: publico,
       data: {
@@ -48,6 +49,7 @@ export class UsuariosService {
         email,
         senhaHash: await bcrypt.hash(dto.senha, 10),
         perfil: Perfil.GARCOM,
+        restauranteId,
       },
     });
   }
@@ -60,6 +62,12 @@ export class UsuariosService {
     if (existente) {
       throw new ConflictException('Já existe um acesso com esse e-mail.');
     }
+    const casa = await this.prisma.restaurante.findUnique({
+      where: { id: dto.restauranteId },
+    });
+    if (!casa) {
+      throw new NotFoundException('Restaurante não encontrado.');
+    }
     return this.prisma.usuario.create({
       select: publico,
       data: {
@@ -67,6 +75,7 @@ export class UsuariosService {
         email,
         senhaHash: await bcrypt.hash(dto.senha, 10),
         perfil: Perfil.GERENTE,
+        restauranteId: casa.id,
       },
     });
   }
@@ -78,14 +87,6 @@ export class UsuariosService {
     }
     if (usuario.perfil !== Perfil.GERENTE) {
       throw new BadRequestException('Só é possível remover um gerente.');
-    }
-    const gerentes = await this.prisma.usuario.count({
-      where: { perfil: Perfil.GERENTE },
-    });
-    if (gerentes <= 1) {
-      throw new BadRequestException(
-        'A casa precisa de pelo menos um gerente.',
-      );
     }
     await this.prisma.usuario.delete({ where: { id } });
     return { ok: true };
@@ -101,5 +102,17 @@ export class UsuariosService {
     }
     await this.prisma.usuario.delete({ where: { id } });
     return { ok: true };
+  }
+
+  private async restauranteDoGarcom() {
+    const casa = await this.prisma.restaurante.findFirst({
+      orderBy: { nome: 'asc' },
+    });
+    if (!casa) {
+      throw new BadRequestException(
+        'Não há restaurante para vincular o garçom.',
+      );
+    }
+    return casa.id;
   }
 }

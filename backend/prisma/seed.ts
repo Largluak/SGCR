@@ -83,12 +83,14 @@ async function main() {
         email: 'carla.souza@ardosia.local',
         senhaHash: senhaGerente,
         perfil: 'GERENTE',
+        restauranteId: 'principal',
       },
       {
         nome: 'João Ribeiro',
         email: 'joao.ribeiro@ardosia.local',
         senhaHash: senhaGarcom,
         perfil: 'GARCOM',
+        restauranteId: 'principal',
       },
       {
         nome: 'Desenvolvedor',

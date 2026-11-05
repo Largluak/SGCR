@@ -14,4 +14,8 @@ export class CriarGerenteDto {
   @MinLength(6, { message: 'A senha precisa ter pelo menos 6 caracteres.' })
   @MaxLength(72)
   senha!: string;
+
+  @IsString()
+  @MinLength(1, { message: 'Escolha o restaurante do gerente.' })
+  restauranteId!: string;
 }

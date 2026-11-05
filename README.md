@@ -61,7 +61,7 @@ As senhas ficam gravadas com hash. Troque `JWT_SECRET` no `backend/.env` se for 
 
 Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência troca o nome, a foto e a cor de destaque do restaurante. O painel continua claro, o salão continua escuro, e as cores de confirmar, cancelar e alerta permanecem as mesmas.
 
-O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados e cria ou remove gerentes. A casa fica com pelo menos um gerente. Essa conta também abre a gestão. O garçom e o gerente não veem esse usuário na equipe.
+O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente não veem esse usuário na equipe.
 
 ## Testes
 

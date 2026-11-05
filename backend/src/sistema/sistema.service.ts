@@ -18,7 +18,12 @@ export class SistemaService {
         this.prisma.usuario.count({ where: { perfil: Perfil.GARCOM } }),
         this.prisma.usuario.findMany({
           where: { perfil: Perfil.GERENTE },
-          select: { id: true, nome: true, email: true },
+          select: {
+            id: true,
+            nome: true,
+            email: true,
+            restaurante: { select: { id: true, nome: true } },
+          },
           orderBy: { nome: 'asc' },
         }),
       ]);

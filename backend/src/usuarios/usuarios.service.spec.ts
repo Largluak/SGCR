@@ -11,11 +11,20 @@ describe('UsuariosService', () => {
       delete: jest.fn(),
       count: jest.fn(),
     },
+    restaurante: {
+      findUnique: jest.fn(),
+      findFirst: jest.fn(),
+    },
   };
   const service = new UsuariosService(prisma as unknown as PrismaService);
 
   beforeEach(() => {
     jest.clearAllMocks();
+    prisma.restaurante.findFirst.mockResolvedValue({ id: 'principal' });
+    prisma.restaurante.findUnique.mockResolvedValue({
+      id: 'principal',
+      nome: 'Ardósia',
+    });
   });
 
   it('cadastra o novo acesso sempre como garçom', async () => {
@@ -39,6 +48,7 @@ describe('UsuariosService', () => {
           nome: 'Ana Lima',
           email: 'ana@ardosia.local',
           perfil: Perfil.GARCOM,
+          restauranteId: 'principal',
         }) as unknown,
       }),
     );
@@ -68,6 +78,7 @@ describe('UsuariosService', () => {
       nome: ' Rita Alves ',
       email: 'Rita@Ardosia.local',
       senha: 'senha123',
+      restauranteId: 'principal',
     });
 
     expect(prisma.usuario.create).toHaveBeenCalledWith(
@@ -76,24 +87,13 @@ describe('UsuariosService', () => {
           nome: 'Rita Alves',
           email: 'rita@ardosia.local',
           perfil: Perfil.GERENTE,
+          restauranteId: 'principal',
         }) as unknown,
       }),
     );
   });
 
-  it('mantém o último gerente da casa', async () => {
-    prisma.usuario.findUnique.mockResolvedValue({
-      id: 'gerente',
-      perfil: Perfil.GERENTE,
-    });
-    prisma.usuario.count.mockResolvedValue(1);
-    await expect(service.removerGerente('gerente')).rejects.toBeInstanceOf(
-      BadRequestException,
-    );
-    expect(prisma.usuario.delete).not.toHaveBeenCalled();
-  });
-
-  it('remove um gerente quando ainda resta outro', async () => {
+  it('remove o gerente mesmo quando ele é o único da casa', async () => {
     prisma.usuario.findUnique.mockResolvedValue({
       id: 'gerente',
       perfil: Perfil.GERENTE,
