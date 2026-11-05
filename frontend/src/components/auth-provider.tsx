@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import type { Perfil, Usuario } from "@/lib/types";
-import { TOKEN_KEY, USER_KEY } from "@/lib/types";
+import { TOKEN_KEY, USER_KEY, destinoDoPerfil } from "@/lib/types";
 
 type AuthContextValue = {
   usuario: Usuario | null;
@@ -68,13 +68,21 @@ export function useAuth() {
 
 export function RequireAuth({
   papel,
+  papeis,
   children,
 }: {
   papel?: Perfil;
+  papeis?: Perfil[];
   children: React.ReactNode;
 }) {
   const { usuario, pronto } = useAuth();
   const router = useRouter();
+  const chave = (papeis ?? (papel ? [papel] : [])).join(",");
+  const exigidos = useMemo(
+    () => (chave ? (chave.split(",") as Perfil[]) : undefined),
+    [chave],
+  );
+  const liberado = !exigidos || (usuario ? exigidos.includes(usuario.perfil) : false);
 
   useEffect(() => {
     if (!pronto) return;
@@ -82,12 +90,12 @@ export function RequireAuth({
       router.replace("/login");
       return;
     }
-    if (papel && usuario.perfil !== papel) {
-      router.replace(usuario.perfil === "GERENTE" ? "/gestao" : "/garcom");
+    if (exigidos && !exigidos.includes(usuario.perfil)) {
+      router.replace(destinoDoPerfil(usuario.perfil));
     }
-  }, [papel, pronto, router, usuario]);
+  }, [exigidos, pronto, router, usuario]);
 
-  if (!pronto || !usuario || (papel && usuario.perfil !== papel)) {
+  if (!pronto || !usuario || !liberado) {
     return (
       <p className="p-8 text-sm text-muted-foreground">Conferindo o acesso...</p>
     );

@@ -10,6 +10,7 @@ datasource db {
 enum Perfil {
   GARCOM
   GERENTE
+  DESENVOLVEDOR
 }
 
 enum StatusComanda {

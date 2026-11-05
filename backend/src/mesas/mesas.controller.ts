@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Perfil } from '@prisma/client';
+import { PAPEIS_GESTAO } from '../common/perfis';
 import { Roles } from '../common/roles.decorator';
 import { AtualizarMesaDto, CriarMesaDto } from './dto/mesa.dto';
 import { MesasService } from './mesas.service';
@@ -26,13 +26,13 @@ export class MesasController {
     return this.mesas.criar(dto.numero);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Patch(':id')
   atualizar(@Param('id') id: string, @Body() dto: AtualizarMesaDto) {
     return this.mesas.atualizar(id, dto.numero);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Delete(':id')
   remover(@Param('id') id: string) {
     return this.mesas.remover(id);

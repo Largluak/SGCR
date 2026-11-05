@@ -75,6 +75,7 @@ async function main() {
   });
   const senhaGerente = await bcrypt.hash('gerente123', 10);
   const senhaGarcom = await bcrypt.hash('garcom123', 10);
+  const senhaDesenvolvedor = await bcrypt.hash('desenvolvedor123', 10);
   await prisma.usuario.createMany({
     data: [
       {
@@ -88,6 +89,12 @@ async function main() {
         email: 'joao.ribeiro@ardosia.local',
         senhaHash: senhaGarcom,
         perfil: 'GARCOM',
+      },
+      {
+        nome: 'Desenvolvedor',
+        email: 'desenvolvedor@sgcr.local',
+        senhaHash: senhaDesenvolvedor,
+        perfil: 'DESENVOLVEDOR',
       },
     ],
   });
@@ -220,6 +227,7 @@ async function main() {
   }
 
   console.log('Seed concluído.');
+  console.log('Desenvolvedor: desenvolvedor@sgcr.local / desenvolvedor123');
   console.log('Gerente: carla.souza@ardosia.local / gerente123');
   console.log('Garçom: joao.ribeiro@ardosia.local / garcom123');
 }

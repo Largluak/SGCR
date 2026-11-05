@@ -6,7 +6,7 @@ O projeto segue o relatório técnico do SGCR: frontend em Next.js (instalável 
 
 ## O que o sistema faz
 
-- Login por perfil. O garçom cai no salão; o gerente cai no painel.
+- Login por perfil. O garçom cai no salão, o gerente cai no painel e o desenvolvedor cai na visão do sistema.
 - Mesas com status livre, ocupada ou aguardando pagamento.
 - Comanda com lançamento, alteração de quantidade e total calculado.
 - Fechamento total ou parcial por itens, com dinheiro, cartão ou Pix. A divisão por pessoa só aparece na tela.
@@ -53,12 +53,15 @@ O `db:setup` gera o cliente do Prisma, aplica as tabelas e carrega o restaurante
 
 | Perfil | E-mail | Senha |
 | --- | --- | --- |
+| Desenvolvedor | desenvolvedor@sgcr.local | desenvolvedor123 |
 | Gerente | carla.souza@ardosia.local | gerente123 |
 | Garçom | joao.ribeiro@ardosia.local | garcom123 |
 
 As senhas ficam gravadas com hash. Troque `JWT_SECRET` no `backend/.env` se for sair do uso local.
 
 Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência troca o nome, a foto e a cor de destaque do restaurante. O painel continua claro, o salão continua escuro, e as cores de confirmar, cancelar e alerta permanecem as mesmas.
+
+O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados e cria ou remove gerentes. A casa fica com pelo menos um gerente. Essa conta também abre a gestão. O garçom e o gerente não veem esse usuário na equipe.
 
 ## Testes
 

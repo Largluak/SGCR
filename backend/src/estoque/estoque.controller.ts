@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
-import { Perfil } from '@prisma/client';
+import { PAPEIS_GESTAO } from '../common/perfis';
 import { Roles } from '../common/roles.decorator';
 import { AjusteEstoqueDto, EntradaEstoqueDto } from './dto/estoque.dto';
 import { EstoqueService } from './estoque.service';
 
-@Roles(Perfil.GERENTE)
+@Roles(...PAPEIS_GESTAO)
 @Controller('estoque')
 export class EstoqueController {
   constructor(private readonly estoque: EstoqueService) {}

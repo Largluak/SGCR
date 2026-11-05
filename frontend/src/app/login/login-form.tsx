@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Usuario } from "@/lib/types";
+import { destinoDoPerfil } from "@/lib/types";
 
 export function LoginForm() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export function LoginForm() {
 
   useEffect(() => {
     if (!pronto || !usuario) return;
-    router.replace(usuario.perfil === "GERENTE" ? "/gestao" : "/garcom");
+    router.replace(destinoDoPerfil(usuario.perfil));
   }, [pronto, router, usuario]);
 
   async function aoEnviar(event: FormEvent) {
@@ -36,7 +37,7 @@ export function LoginForm() {
         },
       );
       entrar(resposta.accessToken, resposta.usuario);
-      router.push(resposta.usuario.perfil === "GERENTE" ? "/gestao" : "/garcom");
+      router.push(destinoDoPerfil(resposta.usuario.perfil));
     } catch (error) {
       setErro(error instanceof Error ? error.message : "Falha no login.");
     } finally {
@@ -116,6 +117,14 @@ export function LoginForm() {
               joao.ribeiro@ardosia.local
               <br />
               senha garcom123
+            </span>
+          </p>
+          <p>
+            Desenvolvedor
+            <span className="mt-1 block font-mono text-xs">
+              desenvolvedor@sgcr.local
+              <br />
+              senha desenvolvedor123
             </span>
           </p>
         </div>

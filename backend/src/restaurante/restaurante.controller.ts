@@ -16,8 +16,8 @@ import {
 } from '@nestjs/common';
 import { MulterError } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Perfil } from '@prisma/client';
 import { Public } from '../common/public.decorator';
+import { PAPEIS_GESTAO } from '../common/perfis';
 import { Roles } from '../common/roles.decorator';
 import { AtualizarRestauranteDto } from './dto/atualizar-restaurante.dto';
 import type { FotoEnviada } from './restaurante.service';
@@ -49,13 +49,13 @@ export class RestauranteController {
     return this.restaurante.obter();
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Patch()
   atualizar(@Body() dto: AtualizarRestauranteDto) {
     return this.restaurante.atualizar(dto);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Post('foto')
   @UseInterceptors(
     FileInterceptor('foto', { limits: { fileSize: 2 * 1024 * 1024 } }),
@@ -64,7 +64,7 @@ export class RestauranteController {
     return this.restaurante.salvarFoto(arquivo);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Delete('foto')
   removerFoto() {
     return this.restaurante.removerFoto();

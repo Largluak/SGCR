@@ -9,6 +9,7 @@ describe('UsuariosService', () => {
       findUnique: jest.fn(),
       create: jest.fn(),
       delete: jest.fn(),
+      count: jest.fn(),
     },
   };
   const service = new UsuariosService(prisma as unknown as PrismaService);
@@ -52,6 +53,55 @@ describe('UsuariosService', () => {
         senha: 'senha123',
       }),
     ).rejects.toBeInstanceOf(ConflictException);
+  });
+
+  it('cadastra o gerente com o perfil de gestão', async () => {
+    prisma.usuario.findUnique.mockResolvedValue(null);
+    prisma.usuario.create.mockResolvedValue({
+      id: 'g2',
+      nome: 'Rita Alves',
+      email: 'rita@ardosia.local',
+      perfil: Perfil.GERENTE,
+    });
+
+    await service.criarGerente({
+      nome: ' Rita Alves ',
+      email: 'Rita@Ardosia.local',
+      senha: 'senha123',
+    });
+
+    expect(prisma.usuario.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          nome: 'Rita Alves',
+          email: 'rita@ardosia.local',
+          perfil: Perfil.GERENTE,
+        }) as unknown,
+      }),
+    );
+  });
+
+  it('mantém o último gerente da casa', async () => {
+    prisma.usuario.findUnique.mockResolvedValue({
+      id: 'gerente',
+      perfil: Perfil.GERENTE,
+    });
+    prisma.usuario.count.mockResolvedValue(1);
+    await expect(service.removerGerente('gerente')).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
+    expect(prisma.usuario.delete).not.toHaveBeenCalled();
+  });
+
+  it('remove um gerente quando ainda resta outro', async () => {
+    prisma.usuario.findUnique.mockResolvedValue({
+      id: 'gerente',
+      perfil: Perfil.GERENTE,
+    });
+    prisma.usuario.count.mockResolvedValue(2);
+    prisma.usuario.delete.mockResolvedValue({});
+    await expect(service.removerGerente('gerente')).resolves.toEqual({ ok: true });
+    expect(prisma.usuario.delete).toHaveBeenCalledWith({ where: { id: 'gerente' } });
   });
 
   it('recusa remover o gerente', async () => {

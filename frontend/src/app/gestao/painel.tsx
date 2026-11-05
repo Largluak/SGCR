@@ -7,7 +7,7 @@ import { MarcaLogo, MarcaNome } from "@/components/marca-provider";
 import { iniciais } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-const links = [
+const linksDaCasa = [
   { href: "/gestao", label: "Visão geral" },
   { href: "/gestao/cardapio", label: "Cardápio" },
   { href: "/gestao/estoque", label: "Estoque" },
@@ -21,6 +21,12 @@ export function Painel({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { usuario, sair } = useAuth();
 
+  const links =
+    usuario?.perfil === "DESENVOLVEDOR"
+      ? [{ href: "/sistema", label: "Sistema" }, ...linksDaCasa]
+      : linksDaCasa;
+  const papel = usuario?.perfil === "DESENVOLVEDOR" ? "Desenvolvedor" : "Gerente";
+
   function ativo(href: string) {
     return href === "/gestao" ? pathname === href : pathname.startsWith(href);
   }
@@ -31,7 +37,7 @@ export function Painel({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <RequireAuth papel="GERENTE">
+    <RequireAuth papeis={["GERENTE", "DESENVOLVEDOR"]}>
       <div className="min-h-dvh overflow-x-clip md:flex">
         <aside className="hidden w-64 shrink-0 flex-col border-r border-border/80 bg-card/80 md:flex">
           <div className="flex items-center gap-3 px-6 pt-8 pb-6">
@@ -66,7 +72,7 @@ export function Painel({ children }: { children: React.ReactNode }) {
               </span>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{usuario?.nome}</p>
-                <p className="text-xs text-muted-foreground">Gerente</p>
+                <p className="text-xs text-muted-foreground">{papel}</p>
               </div>
             </div>
             <button

@@ -8,9 +8,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { Perfil } from '@prisma/client';
 import type { AuthUser } from '../common/auth-user';
 import { CurrentUser } from '../common/current-user.decorator';
+import { PAPEIS_GESTAO, ehGestao } from '../common/perfis';
 import { Roles } from '../common/roles.decorator';
 import { SalvarProdutoDto } from './dto/produto.dto';
 import { ProdutosService } from './produtos.service';
@@ -25,23 +25,23 @@ export class ProdutosController {
     @Query('incluirInativos') incluirInativos?: string,
   ) {
     const incluir =
-      user.perfil === Perfil.GERENTE && incluirInativos === 'true';
+      ehGestao(user.perfil) && incluirInativos === 'true';
     return this.produtos.listar(incluir);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Post()
   criar(@Body() dto: SalvarProdutoDto) {
     return this.produtos.criar(dto);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Patch(':id')
   atualizar(@Param('id') id: string, @Body() dto: SalvarProdutoDto) {
     return this.produtos.atualizar(id, dto);
   }
 
-  @Roles(Perfil.GERENTE)
+  @Roles(...PAPEIS_GESTAO)
   @Delete(':id')
   remover(@Param('id') id: string) {
     return this.produtos.remover(id);

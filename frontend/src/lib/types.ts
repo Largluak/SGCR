@@ -1,4 +1,10 @@
-export type Perfil = "GARCOM" | "GERENTE";
+export type Perfil = "GARCOM" | "GERENTE" | "DESENVOLVEDOR";
+
+export function destinoDoPerfil(perfil: Perfil) {
+  if (perfil === "DESENVOLVEDOR") return "/sistema";
+  if (perfil === "GERENTE") return "/gestao";
+  return "/garcom";
+}
 
 export type Usuario = {
   id: string;

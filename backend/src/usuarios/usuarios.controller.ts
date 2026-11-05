@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Perfil } from '@prisma/client';
+import { PAPEIS_GESTAO } from '../common/perfis';
 import { Roles } from '../common/roles.decorator';
 import { CriarGarcomDto } from './dto/criar-garcom.dto';
 import { UsuariosService } from './usuarios.service';
 
 @Controller('usuarios')
-@Roles(Perfil.GERENTE)
+@Roles(...PAPEIS_GESTAO)
 export class UsuariosController {
   constructor(private readonly usuarios: UsuariosService) {}
 

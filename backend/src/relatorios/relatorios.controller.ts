@@ -1,11 +1,11 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
-import { Perfil } from '@prisma/client';
+import { PAPEIS_GESTAO } from '../common/perfis';
 import { Roles } from '../common/roles.decorator';
 import { RelatorioQueryDto } from './dto/relatorio.dto';
 import { gerarPlanilha, nomeDoArquivo } from './planilha';
 import { RelatoriosService } from './relatorios.service';
 
-@Roles(Perfil.GERENTE)
+@Roles(...PAPEIS_GESTAO)
 @Controller()
 export class RelatoriosController {
   constructor(private readonly relatorios: RelatoriosService) {}

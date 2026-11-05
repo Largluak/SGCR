@@ -17,7 +17,12 @@ export function SalaoShell({ children }: { children: React.ReactNode }) {
 function BarraDaConta() {
   const router = useRouter();
   const { usuario, sair } = useAuth();
-  const papel = usuario?.perfil === "GERENTE" ? "Gerente" : "Garçom";
+  const papel =
+    usuario?.perfil === "DESENVOLVEDOR"
+      ? "Desenvolvedor"
+      : usuario?.perfil === "GERENTE"
+        ? "Gerente"
+        : "Garçom";
 
   return (
     <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-salao-line bg-salao/95 px-4 py-2 pt-[max(0.5rem,env(safe-area-inset-top))] backdrop-blur">
