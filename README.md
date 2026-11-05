@@ -63,7 +63,7 @@ Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência 
 
 O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente só enxergam a própria casa. O desenvolvedor não aparece na equipe.
 
-O Rancho do Didi entra com a gerente Patricia Melo, 8 mesas e o cardápio da foto. As bebidas começam com 24 unidades no estoque, porque a foto não informa a quantidade. A cor de destaque é o terracota do cardápio, `#C45C26`. O acesso dela não fica na tela de login, para não ficar público.
+O Rancho do Didi entra com a gerente Patricia Melo, 8 mesas e o cardápio da foto. Há comandas de exemplo de julho a novembro, duas delas ainda abertas, para a casa não aparecer vazia. As bebidas começam com 24 unidades, porque a foto não informa a quantidade, e as vendas de exemplo baixam esse estoque. A cor de destaque é o terracota do cardápio, `#C45C26`. O acesso dela não fica na tela de login, para não ficar público.
 
 ## Testes
 

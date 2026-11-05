@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, StatusComanda, TipoProduto } from '@prisma/client';
-import { filtroCasa, filtroPelaMesa } from '../common/casa';
+import { casaAtual, filtroCasa, filtroPelaMesa } from '../common/casa';
 import { fromCents, toCents } from '../common/money';
 import { statusDaMesa, totalDosItens } from '../mesas/mesas.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -168,6 +168,16 @@ export class RelatoriosService {
       vendasPorMes,
       ranking: ranking.slice(0, 8),
     };
+  }
+
+  async nomeDaCasa() {
+    const id = casaAtual();
+    if (!id) return 'Restaurante';
+    const casa = await this.prisma.restaurante.findUnique({
+      where: { id },
+      select: { nome: true },
+    });
+    return casa?.nome ?? 'Restaurante';
   }
 
   private somarProduto(

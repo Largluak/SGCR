@@ -23,7 +23,8 @@ export class RelatoriosController {
   @Get('relatorios/excel')
   async excel(@Query() query: RelatorioQueryDto) {
     const dados = await this.relatorios.relatorio(query);
-    const conteudo = await gerarPlanilha(dados);
+    const casa = await this.relatorios.nomeDaCasa();
+    const conteudo = await gerarPlanilha({ ...dados, casa });
     return new StreamableFile(conteudo, {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       disposition: `attachment; filename="${nomeDoArquivo(dados.periodo, dados.rotulo)}"`,

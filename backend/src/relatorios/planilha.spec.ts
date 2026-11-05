@@ -2,6 +2,7 @@ import { Workbook } from 'exceljs';
 import { gerarPlanilha, nomeDoArquivo, type DadosPlanilha } from './planilha';
 
 const dados: DadosPlanilha = {
+  casa: 'Ardósia',
   periodo: 'semestral',
   rotulo: '2º semestre de 2026',
   totalVendido: 961,
@@ -41,14 +42,18 @@ describe('planilha do relatório', () => {
     const resumo = livro.getWorksheet('Resumo');
     const meses = livro.getWorksheet('Vendas por mês');
     const produtos = livro.getWorksheet('Produtos');
-    expect(resumo?.getCell('A1').value).toBe('Campo');
-    expect(resumo?.getCell('B2').value).toBe('2º semestre de 2026');
-    expect(resumo?.getCell('B3').value).toBe(961);
-    expect(resumo?.getCell('B4').value).toBe(3);
-    expect(meses?.getCell('A3').value).toBe('Out');
-    expect(meses?.getCell('B3').value).toBe(480);
-    expect(produtos?.getCell('B2').value).toBe('Picanha na chapa');
-    expect(produtos?.getCell('C3').value).toBe(6);
-    expect(produtos?.getCell('D3').value).toBe(96);
+    expect(resumo?.getCell('A2').value).toBe('Relatório de vendas');
+    expect(resumo?.getCell('A3').value).toBe('Ardósia  ·  2º semestre de 2026');
+    expect(resumo?.getCell('A6').value).toBe(961);
+    expect(resumo?.getCell('B6').value).toBe(3);
+    expect(resumo?.getCell('A9').value).toBe('Picanha na chapa');
+    expect(meses?.getCell('A4').value).toBe('Mês');
+    expect(meses?.getCell('A6').value).toBe('Out');
+    expect(meses?.getCell('B6').value).toBe(480);
+    expect(produtos?.getCell('B5').value).toBe('Picanha na chapa');
+    expect(produtos?.getCell('C6').value).toBe(6);
+    expect(produtos?.getCell('D6').value).toBe(96);
+    expect(resumo?.getCell('A2').font?.color?.argb).toBe('FFFFFFFF');
+    expect(meses?.getCell('A4').fill).toMatchObject({ fgColor: { argb: 'FFC45C26' } });
   });
 });
