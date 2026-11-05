@@ -125,14 +125,6 @@ export function LoginForm() {
             </span>
           </p>
           <p>
-            Patricia, gerente do Rancho do Didi
-            <span className="mt-1 block font-mono text-xs">
-              patricia.melo@ranchododidi.local
-              <br />
-              senha patricia123
-            </span>
-          </p>
-          <p>
             Desenvolvedor
             <span className="mt-1 block font-mono text-xs">
               desenvolvedor@sgcr.local

@@ -56,7 +56,6 @@ O `db:setup` gera o cliente do Prisma, aplica as tabelas e carrega o restaurante
 | Desenvolvedor | desenvolvedor@sgcr.local | desenvolvedor123 |
 | Gerente | carla.souza@ardosia.local | gerente123 |
 | Garçom | joao.ribeiro@ardosia.local | garcom123 |
-| Gerente do Rancho do Didi | patricia.melo@ranchododidi.local | patricia123 |
 
 As senhas ficam gravadas com hash. Troque `JWT_SECRET` no `backend/.env` se for sair do uso local.
 
@@ -64,7 +63,7 @@ Em Gestão → Equipe o gerente cadastra os garçons. Em Gestão → Aparência 
 
 O desenvolvedor é a conta de quem mantém o sistema. Em Sistema ele vê os restaurantes cadastrados, abre a gestão de cada casa e cria ou remove gerentes. Cada gerente aparece ligado ao restaurante que comanda. O garçom e o gerente só enxergam a própria casa. O desenvolvedor não aparece na equipe.
 
-O Rancho do Didi entra com a gerente Patricia Melo, 8 mesas e o cardápio da foto. As bebidas começam com 24 unidades no estoque, porque a foto não informa a quantidade. A cor de destaque é o terracota do cardápio, `#C45C26`.
+O Rancho do Didi entra com a gerente Patricia Melo, 8 mesas e o cardápio da foto. As bebidas começam com 24 unidades no estoque, porque a foto não informa a quantidade. A cor de destaque é o terracota do cardápio, `#C45C26`. O acesso dela não fica na tela de login, para não ficar público.
 
 ## Testes
 
